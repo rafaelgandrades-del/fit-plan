@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>FitPlan Smart — Elite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --ink:        #10201A;
+        --ink-soft:   #5C7069;
+        --bg:         #EFF3F0;
+        --card:       #FFFFFF;
+        --line:       rgba(16,32,26,0.08);
+        --primary:    #0B6E52;
+        --primary-d:  #084F3B;
+        --accent:     #FF5B35;
+        --accent-d:   #E14722;
+        --gold:       #C99A3B;
+        --shadow:     0 1px 2px rgba(16,32,26,0.04), 0 8px 24px -12px rgba(16,32,26,0.18);
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        margin: 0;
+        padding: 24px 16px 60px;
+        -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 520px; margin: auto; }
+
+    .eyebrow {
+        font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--primary); margin: 0 0 4px 2px;
+    }
+
+    header {
+        display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    }
+    h1 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 40px; letter-spacing: 0.02em; margin: 0; line-height: 1;
+        color: var(--ink);
+    }
+    h1 span { color: var(--primary); }
+
+    /* ---- Cards / sections ---- */
+    .surface {
+        background: var(--card);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        margin-bottom: 18px;
+        overflow: hidden;
+    }
+    .surface-pad { padding: 6px 18px; }
+    .section-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--primary-d); padding: 16px 18px 8px;
+    }
+
+    .input-row {
+        display: flex; align-items: center; padding: 13px 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .input-row:last-child { border-bottom: none; }
+    label { width: 130px; font-size: 14.5px; font-weight: 500; color: var(--ink); flex-shrink: 0; }
+    input, select {
+        flex: 1; border: none; background: transparent; font-size: 15px; color: var(--ink);
+        text-align: right; outline: none; font-family: inherit;
+    }
+    select { appearance: none; -webkit-appearance: none; }
+    input::placeholder { color: #B7C2BD; }
+
+    .input-block { padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .input-block:last-child { border-bottom: none; }
+    .input-block label { display: block; width: 100%; margin-bottom: 8px; }
+    .input-block textarea {
+        width: 100%; border: 1px solid var(--line); background: var(--bg);
+        border-radius: 12px; padding: 11px 12px; font-size: 14px; color: var(--ink);
+        outline: none; resize: none; box-sizing: border-box; font-family: inherit; line-height: 1.5;
+    }
+    .input-block textarea:focus { border-color: var(--primary); }
+
+    /* ---- Weekly agenda strip ---- */
+    .agenda-strip { display: flex; gap: 6px; padding: 4px 18px 18px; }
+    .dia-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .dia-label {
+        font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.05em;
+        color: var(--ink-soft);
+    }
+    .dia-input {
+        writing-mode: vertical-rl; text-orientation: mixed;
+        width: 30px; height: 108px; background: var(--bg); border: 1px solid var(--line);
+        border-radius: 10px; font-size: 11px; color: var(--ink); text-align: center;
+        padding: 8px 0; resize: none; font-family: inherit; outline: none;
+    }
+    .dia-input:focus { border-color: var(--primary); }
+    .dia-input::placeholder { color: #C3CDC8; font-size: 10px; }
+
+    /* ---- Buttons ---- */
+    button.primary-btn {
+        width: 100%; padding: 17px; background: var(--accent); color: white; border: none;
+        border-radius: 14px; font-size: 15px; font-weight: 700; letter-spacing: 0.03em;
+        text-transform: uppercase; cursor: pointer; margin-bottom: 8px;
+        box-shadow: 0 10px 20px -8px rgba(255,91,53,0.55);
+        transition: transform .12s ease;
+    }
+    button.primary-btn:active { transform: scale(0.98); }
+    button.ghost-btn {
+        width: 100%; padding: 15px; background: transparent; color: var(--ink-soft);
+        border: 1px solid var(--line); border-radius: 14px; font-size: 14px; font-weight: 600;
+        cursor: pointer; margin-top: 20px;
+    }
+
+    #resultado { display: none; animation: fadeIn .4s ease; }
+    .perfil-resumo-top {
+        font-size: 13px; color: var(--ink-soft); margin: -6px 0 20px 2px;
+        padding-left: 12px; border-left: 3px solid var(--accent);
+    }
+    #saudacao { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.02em; margin: 0 0 2px; }
+
+    /* ---- Macro rings ---- */
+    .macro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+    .macro-card {
+        background: var(--card); border-radius: 16px; padding: 16px 8px; text-align: center;
+        box-shadow: var(--shadow);
+    }
+    .macro-card svg { display: block; margin: 0 auto 8px; }
+    .macro-card strong {
+        display: block; font-size: 10px; color: var(--ink-soft); text-transform: uppercase;
+        letter-spacing: 0.06em; margin-bottom: 2px;
+    }
+    .macro-card span { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--ink); letter-spacing: 0.02em; }
+
+    /* ---- Coach feedback ---- */
+    .coach-block {
+        background: linear-gradient(155deg, var(--primary-d), var(--primary));
+        color: #EAF6EF; border-radius: 18px; padding: 20px; margin-bottom: 18px;
+        box-shadow: var(--shadow);
+    }
+    .coach-block .section-title { color: #C7E9D8; padding: 0 0 10px; }
+    .coach-block-body { font-size: 14px; line-height: 1.6; }
+    .coach-block-body b { color: #FFFFFF; }
+
+    /* ---- Menu block ---- */
+    .bloco { background: var(--card); border-radius: 18px; padding: 6px 18px 18px; margin-bottom: 18px; box-shadow: var(--shadow); }
+    .tabs-menu {
+        display: flex; background: var(--bg); border-radius: 12px; padding: 3px; margin: 4px 0 16px; gap: 2px;
+    }
+    .tab-btn {
+        flex: 1; background: transparent; border: none; color: var(--ink-soft);
+        padding: 9px 0; font-size: 12.5px; font-weight: 700; letter-spacing: 0.02em;
+        border-radius: 9px; cursor: pointer; margin-bottom: 0; font-family: inherit;
+    }
+    .tab-btn.active { background: var(--card); color: var(--primary-d); box-shadow: 0 1px 4px rgba(16,32,26,0.12); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn .3s ease; }
+
+    .dieta-box { border-left: 3px solid var(--primary); padding: 2px 0 2px 14px; margin-bottom: 16px; }
+    .dieta-box.alt { border-left-color: var(--gold); }
+    .dieta-box b { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; display: block; }
+    .dieta-box p { margin: 5px 0 0; font-size: 14.5px; line-height: 1.5; }
+
+    .info-final { font-size: 12.5px; color: var(--ink-soft); line-height: 1.8; }
+    .info-final b { color: var(--ink); }
+
+    #historico-secao { margin-top: 26px; }
+    #historico-secao .section-title { padding-left: 2px; }
+    .hist-item {
+        background: var(--card); padding: 12px 14px; border-radius: 12px; margin-bottom: 6px;
+        display: flex; justify-content: space-between; align-items: center; font-size: 13px;
+        box-shadow: var(--shadow);
+    }
+    .hist-item strong { color: var(--primary-d); }
+    .hist-empty { font-size: 12.5px; color: var(--ink-soft); padding: 4px 2px; }
+
+    .aviso-box {
+        font-size: 12px; color: var(--accent-d); background: #FFF1EC; border: 1px solid #FFD9CB;
+        border-radius: 10px; padding: 8px 10px; margin: -4px 0 14px;
+    }
+
+    .consent-box {
+        display: flex; gap: 10px; align-items: flex-start; width: 100%;
+        font-size: 12px; font-weight: 400; color: var(--ink-soft); line-height: 1.5;
+        margin: 0 2px 14px; cursor: pointer;
+    }
+    .consent-box input { flex: none; width: 18px; height: 18px; margin-top: 1px; accent-color: var(--primary); }
+    .save-status { font-size: 12px; margin: -10px 0 16px 2px; color: var(--ink-soft); }
+    .save-status.ok { color: var(--primary); }
+    .save-status.erro { color: var(--accent-d); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <svg width="42" height="42" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="24" fill="url(#g1)"/>
+            <path d="M50 22C50 22 30 34 30 54C30 68 39 78 50 78C61 78 70 68 70 54C70 34 50 22 50 22Z" fill="#EAF6EF" fill-opacity="0.16"/>
+            <path d="M50 30V50M50 50L41 56M50 50L59 56" stroke="#EAF6EF" stroke-width="6" stroke-linecap="round"/>
+            <path d="M40 62C40 62 43 70 50 70C57 70 60 62 60 62" stroke="#FF5B35" stroke-width="6" stroke-linecap="round"/>
+            <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#0B6E52"/>
+                    <stop offset="1" stop-color="#084F3B"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        <div>
+            <div class="eyebrow">Consultoria nutricional</div>
+            <h1>FitPlan <span>Elite</span></h1>
+        </div>
+    </header>
+
+    <div id="form-dieta">
+        <div class="surface surface-pad">
+            <div class="section-title" style="padding-left:0;">Seus dados</div>
+            <div class="input-row"><label>Nome</label><input type="text" id="nome" placeholder="Seu nome"></div>
+            <div class="input-row">
+                <label>Sexo biológico</label>
+                <select id="genero">
+                    <option value="m">Masculino</option>
+                    <option value="f">Feminino</option>
+                </select>
+            </div>
+            <div class="input-row"><label>Peso (kg)</label><input type="number" id="peso" step="0.1" placeholder="0"></div>
+            <div class="input-row"><label>Altura (cm)</label><input type="number" id="altura" placeholder="0"></div>
+            <div class="input-row"><label>Idade</label><input type="number" id="idade" placeholder="0"></div>
+        </div>
+
+        <div class="surface">
+            <div class="section-title">🗓️ Agenda de treinos</div>
+            <div class="agenda-strip" id="agenda-inputs"></div>
+        </div>
+
+        <div class="surface surface-pad">
+            <div class="section-title" style="padding-left:0;">Metas &amp; preferências</div>
+            <div class="input-row">
+                <label>Objetivo</label>
+                <select id="objetivo">
+                    <option value="emagrecer">Emagrecer</option>
+                    <option value="manter">Manter peso</option>
+                    <option value="ganhar">Ganhar massa</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <label>Restrição</label>
+                <select id="restricao">
+                    <option value="nenhuma">Nenhuma</option>
+                    <option value="vegano">Vegano</option>
+                    <option value="lactose">Sem lactose</option>
+                    <option value="gluten">Sem glúten</option>
+                </select>
+            </div>
+            <div class="input-block">
+                <label>🍕 Alimentos que você ama comer</label>
+                <textarea id="preferencias" rows="2" placeholder="Ex: arroz, feijão, chocolate, hambúrguer, banana, batata frita..."></textarea>
+            </div>
+        </div>
+        <label class="consent-box">
+            <input type="checkbox" id="consentimento">
+            <span>Autorizo o armazenamento dos meus dados (incluindo peso, altura e restrições alimentares) para fins de acompanhamento nutricional, conforme a LGPD. Posso pedir a exclusão a qualquer momento.</span>
+        </label>
+        <button class="primary-btn" onclick="gerarPlano()">Gerar estratégia de elite</button>
+    </div>
+
+    <div id="resultado">
+        <h2 id="saudacao"></h2>
+        <div id="perfil-info-top" class="perfil-resumo-top"></div>
+        <div id="save-status" class="save-status"></div>
+
+        <div class="macro-grid" id="macro-grid"></div>
+
+        <div id="aviso-macro"></div>
+
+        <div class="coach-block">
+            <div class="section-title">🏅 Feedback esportivo</div>
+            <div id="feedback-coach" class="coach-block-body"></div>
+        </div>
+
+        <div class="bloco">
+            <div class="section-title" style="padding-left:0;">🍴 Cardápios adaptados ao seu gosto</div>
+            <div class="tabs-menu">
+                <button class="tab-btn active" onclick="switchTab('opcaoA', this)">A</button>
+                <button class="tab-btn" onclick="switchTab('opcaoB', this)">B</button>
+                <button class="tab-btn" onclick="switchTab('opcaoC', this)">C</button>
+                <button class="tab-btn" onclick="switchTab('opcaoD', this)">D</button>
+            </div>
+            <div id="cardapio-conteudo"></div>
+        </div>
+
+        <div class="surface surface-pad" style="background: repeating-linear-gradient(135deg, var(--card), var(--card) 10px, #F7F5F0 10px, #F7F5F0 11px);">
+            <div class="section-title" style="padding-left:0;">📋 Resumo técnico</div>
+            <div id="info-usuario-final" class="info-final" style="padding-bottom:14px;"></div>
+        </div>
+
+        <div id="historico-secao">
+            <div class="section-title">🕒 Histórico de evolução</div>
+            <div id="lista-historico"></div>
+        </div>
+
+        <button class="ghost-btn" onclick="novaConsulta()">Nova consulta</button>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+/* Preferências do próprio cliente (nome, agenda, histórico) ficam no
+   navegador dele via localStorage. Os dados da consulta são enviados
+   ao Supabase para o consultor acompanhar (ver salvarNoSupabase). */
+const mem = {
+    get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+};
+
+async function salvarNoSupabase(registro) {
+    const status = document.getElementById('save-status');
+    const cfg = window.FITPLAN_CONFIG || {};
+    if (!cfg.SUPABASE_URL || cfg.SUPABASE_URL.includes('SEU-PROJETO')) {
+        status.className = 'save-status erro';
+        status.textContent = 'Supabase não configurado (edite config.js).';
+        return;
+    }
+    status.className = 'save-status';
+    status.textContent = 'Salvando sua consulta…';
+    try {
+        const resp = await fetch(`${cfg.SUPABASE_URL}/rest/v1/consultas`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': cfg.SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${cfg.SUPABASE_ANON_KEY}`,
+                'Prefer': 'return=minimal',
+            },
+            body: JSON.stringify(registro),
+        });
+        if (!resp.ok) throw new Error(`${resp.status} ${await resp.text()}`);
+        status.className = 'save-status ok';
+        status.textContent = '✓ Consulta salva com sucesso.';
+    } catch (e) {
+        console.error('Erro ao salvar no Supabase:', e);
+        status.className = 'save-status erro';
+        status.textContent = '⚠️ Não foi possível salvar a consulta. Verifique sua conexão.';
+    }
+}
+
+const dias = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+
+window.onload = () => {
+    const container = document.getElementById('agenda-inputs');
+    dias.forEach(dia => {
+        const salvo = mem.get(`treino_${dia}`) || "";
+        const col = document.createElement('div');
+        col.className = 'dia-col';
+        col.innerHTML = `
+            <span class="dia-label">${dia}</span>
+            <textarea id="in_${dia}" class="dia-input" placeholder="treino">${salvo}</textarea>`;
+        container.appendChild(col);
+    });
+    if (mem.get('fit_nome')) document.getElementById('nome').value = mem.get('fit_nome');
+    exibirHistorico();
+};
+
+function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+}
+
+function novaConsulta() {
+    document.getElementById('resultado').style.display = 'none';
+    document.getElementById('form-dieta').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function ring(pct, colorVar, label, value) {
+    const r = 26, c = 2 * Math.PI * r;
+    const offset = c - (Math.min(pct, 1) * c);
+    return `
+    <div class="macro-card">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="${r}" fill="none" stroke="var(--bg)" stroke-width="7"/>
+            <circle cx="32" cy="32" r="${r}" fill="none" stroke="${colorVar}" stroke-width="7"
+                stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${offset}"
+                transform="rotate(-90 32 32)"/>
+        </svg>
+        <strong>${label}</strong>
+        <span>${value}</span>
+    </div>`;
+}
+
+function gerarPlano() {
+    const nome = document.getElementById('nome').value || "Atleta";
+    const genero = document.getElementById('genero').value; // 'm' ou 'f'
+    const peso = parseFloat(document.getElementById('peso').value);
+    const altura = parseFloat(document.getElementById('altura').value);
+    const idade = parseInt(document.getElementById('idade').value);
+    const objetivo = document.getElementById('objetivo').value;
+    const restricao = document.getElementById('restricao').value;
+    const prefs = (document.getElementById('preferencias').value || "").toLowerCase();
+
+    if (!peso || !altura || !idade) return alert("Preencha todos os dados.");
+    if (!document.getElementById('consentimento').checked) return alert("Para continuar, marque a autorização de uso dos dados.");
+    mem.set('fit_nome', nome);
+
+    let treinosTotais = 0;
+    let diasDuplos = 0;
+    let agendaStr = "";
+    let agendaResumo = "";
+
+    dias.forEach(dia => {
+        const t = document.getElementById(`in_${dia}`).value;
+        mem.set(`treino_${dia}`, t);
+        if (t.trim() && t.toLowerCase() !== "descanso") {
+            treinosTotais++;
+            agendaStr += t.toLowerCase() + " ";
+            agendaResumo += `${dia}: ${t} | `;
+            if (t.includes("+") || t.toLowerCase().includes(" e ")) diasDuplos++;
+        }
+    });
+
+    let fa = 1.2;
+    if (treinosTotais >= 3) fa = 1.375;
+    if (treinosTotais >= 5) fa = 1.55;
+    if (diasDuplos >= 2) fa = 1.725;
+    if (diasDuplos >= 4) fa = 1.9;
+
+    // CORREÇÃO 1: fórmula de Mifflin-St Jeor depende do sexo biológico.
+    // Antes o cálculo somava sempre "+5" (constante válida só para homens),
+    // o que superestimava o gasto calórico — e por consequência todas as
+    // quantidades de comida — de clientes do sexo feminino.
+    const constanteSexo = genero === 'f' ? -161 : 5;
+    let kcal = ((10 * peso) + (6.25 * altura) - (5 * idade) + constanteSexo) * fa;
+    if (objetivo === 'emagrecer') kcal -= 450;
+    if (objetivo === 'ganhar') kcal += 450;
+    kcal = Math.max(kcal, peso * 20); // piso de segurança (nunca abaixo de ~20kcal/kg)
+
+    // CORREÇÃO 3: a meta de proteína estava fixa em 2,2g/kg para qualquer
+    // cliente — valor de topo, usado só por atletas avançados em definição.
+    // Isso inflava as porções de frango/carne/tofu (calculadas a partir de
+    // pG) muito acima do necessário. Agora a meta varia por objetivo e
+    // frequência de treino, ficando entre 1,6g/kg (manutenção, pouco treino)
+    // e 2,0g/kg (ganho de massa ou alto volume de treino).
+    let protMultiplier = 1.6;
+    if (objetivo === 'ganhar' || objetivo === 'emagrecer') protMultiplier = 1.8;
+    if (treinosTotais >= 5) protMultiplier += 0.2;
+    protMultiplier = Math.min(protMultiplier, 2.0);
+    const pG = peso * protMultiplier;
+    let cG = (kcal - (pG * 4) - (peso * 0.8 * 9)) / 4;
+
+    // CORREÇÃO 2: quando o déficit calórico é muito agressivo em relação ao
+    // peso/proteína do cliente, "cG" podia ficar negativo ou muito baixo,
+    // gerando quantidades de comida negativas/zeradas no cardápio (ex: "-40g
+    // de arroz"). Agora aplicamos um piso mínimo de carboidrato e avisamos
+    // o cliente quando isso acontece.
+    let avisoMacro = "";
+    const cGminimo = Math.round(peso * 1.2); // piso mínimo de carboidrato (g)
+    if (cG < cGminimo) {
+        cG = cGminimo;
+        avisoMacro = `<div class="aviso-box">⚠️ O déficit calórico calculado era agressivo demais para manter a meta de proteína com segurança. Ajustamos o carboidrato para um piso mínimo de ${cGminimo}g/dia — consulte um nutricionista para revisar a meta calórica.</div>`;
+    }
+
+    // CORREÇÃO 4: cada refeição principal (almoço e jantar) usava 30% do
+    // total diário de proteína/carboidrato — mas como frango/carne/tofu
+    // aparecem tanto no almoço quanto no jantar, isso somava 60% do dia só
+    // nessas duas refeições, gerando porções desproporcionalmente grandes.
+    // Reduzido para 25% por refeição.
+    // CORREÇÃO 5: os alimentos eram calculados como % linear do total de
+    // carboidrato/proteína do dia, sem limite de porção realista. Para
+    // metas calóricas altas (treino duplo frequente, ganho de massa), isso
+    // gerava porções absurdas — ex: 150g+ de aveia seca só no café da manhã.
+    // Agora cada alimento tem um teto de porção realista; o que excede o
+    // teto fica retido dentro do plano geral (o cliente pode complementar
+    // com fruta, pão ou uma porção extra do mesmo item em outro horário).
+    const arroz = Math.min(Math.round((cG * 0.25) / 0.28), 300);
+    const batataDoce = Math.min(Math.round((cG * 0.25) / 0.20), 350);
+    const aveiaBruta = Math.round((cG * 0.18) / 0.60);
+    const aveia = Math.min(aveiaBruta, 80);
+    const frango = Math.min(Math.round((pG * 0.25) / 0.25), 250);
+    const carneMagra = Math.min(Math.round((pG * 0.25) / 0.26), 250);
+    const tofu = Math.min(Math.round((pG * 0.25) / 0.08), 400);
+
+    if (aveiaBruta > 80) {
+        avisoMacro += `<div class="aviso-box">⚠️ Sua meta calórica é alta em relação ao peso corporal — limitamos a aveia do café da manhã a uma porção realista (80g) e sugerimos completar a diferença com mais 1 fruta ou 2 fatias de pão integral no mesmo horário.</div>`;
+    }
+
+    let carbAlmoco = `${arroz}g de Arroz Integral`;
+    let protAlmoco = restricao === 'vegano' ? `${tofu}g de Tofu Grelhado` : `${frango}g de Peito de Frango`;
+    let docePermitido = "1 Fruta Fresca";
+    let lancheCustom = "Shake: 1 Banana + Aveia + Proteína";
+    let jantarCustom = restricao === 'vegano' ? `${tofu}g de Tofu` : `${frango}g de Frango Desfiado`;
+    let fbkCustom = "";
+
+    if (prefs.includes("batata doce") || prefs.includes("mandioca")) {
+        carbAlmoco = `${batataDoce}g de Batata Doce ou Mandioca Assada`;
+    } else if (prefs.includes("arroz") || prefs.includes("feijão") || prefs.includes("feijao")) {
+        carbAlmoco = `${Math.round(arroz * 0.7)}g de Arroz + 80g de Feijão`;
+    } else if (prefs.includes("macarrão") || prefs.includes("macarrao") || prefs.includes("massa")) {
+        carbAlmoco = `${Math.round(arroz * 0.9)}g de Macarrão Integral ao Molho Sugo`;
+    }
+
+    if (prefs.includes("carne") || prefs.includes("patinho") || prefs.includes("bife")) {
+        if (restricao !== 'vegano') protAlmoco = `${carneMagra}g de Patinho Moído ou Filé Mignon Grelhado`;
+    }
+
+    if (prefs.includes("chocolate") || prefs.includes("doce")) {
+        docePermitido = "20g de Chocolate Amargo 70% ou superior";
+        fbkCustom += `🍫 <b>Ajuste de desejo:</b> alocamos um quadrado de chocolate amargo logo após o almoço. O cacau ajuda na saciedade sem prejudicar a queima calórica.<br><br>`;
+    }
+
+    if (prefs.includes("hambúrguer") || prefs.includes("hamburguer")) {
+        jantarCustom = `Hambúrguer Caseiro Fit (${carneMagra}g de carne magra grelhada) no prato com salada`;
+        fbkCustom += `🍔 <b>Versão fit de elite:</b> seu desejo por hambúrguer foi adaptado — carne magra pura, sem óleo, com queijo magro.<br><br>`;
+    }
+
+    if (prefs.includes("pizza")) {
+        jantarCustom = `Pizza Fit de Frigideira (massa de Rap10 integral ou couve-flor, molho natural, queijo magro e frango desfiado)`;
+        fbkCustom += `🍕 <b>Noite de pizza saudável:</b> jantar adaptado para uma versão funcional, de baixa caloria e alta proteína.<br><br>`;
+    }
+
+    if (prefs.includes("ovo") || prefs.includes("omelete")) {
+        lancheCustom = "Omelete de 3 ovos com vegetais + 1 fatia de pão integral";
+    }
+
+    let fbk = `💧 <b>Hidratação crítica:</b> consuma no mínimo <b>${Math.round(peso * 45)}ml</b> de água por dia.<br><br>${fbkCustom}`;
+    if (diasDuplos > 0) fbk += `⚡ <b>Volume de elite:</b> identificamos ${diasDuplos} dia(s) de carga dupla. Use o carboidrato do almoço como base de energia.<br><br>`;
+    if (agendaStr.includes("musculação") || agendaStr.includes("academia")) fbk += `💪 <b>Anabolismo:</b> distribua os <b>${Math.round(pG)}g de proteína</b> em porções iguais ao longo do dia.<br>`;
+
+    document.getElementById('feedback-coach').innerHTML = fbk;
+    document.getElementById('aviso-macro').innerHTML = avisoMacro;
+
+    let pao = restricao === "gluten" ? "Pão Sem Glúten" : "Pão Integral";
+    let shakeBase = restricao === "vegano" ? "Proteína Isolada de Ervilha" : (restricao === "lactose" ? "Whey Isolado Zero Lactose" : "Whey Protein");
+
+    let cardapioHTML = `
+        <div id="opcaoA" class="tab-content active">
+            <div class="dieta-box"><b>Café da manhã</b><p>${restricao === 'vegano' ? 'Mexido de Tofu' : '3 Ovos Mexidos'} + 2 fatias de ${pao} + 1 fruta de sua escolha</p></div>
+            <div class="dieta-box alt"><b>Almoço (adaptado)</b><p>${carbAlmoco} + ${protAlmoco} + salada verde livre + <b>sobremesa:</b> ${docePermitido}</p></div>
+            <div class="dieta-box"><b>Lanche da tarde</b><p>${lancheCustom}</p></div>
+            <div class="dieta-box alt"><b>Jantar (adaptado)</b><p>${jantarCustom} + legumes no vapor (brócolis/chuchu)</p></div>
+        </div>
+
+        <div id="opcaoB" class="tab-content">
+            <div class="dieta-box"><b>Café da manhã</b><p>Vitamina prática: 1 banana + ${aveia}g de aveia + 30g de ${shakeBase}</p></div>
+            <div class="dieta-box alt"><b>Almoço</b><p>${batataDoce}g de batata doce + ${restricao === 'vegano' ? '180g de grão de bico' : carneMagra + 'g de patinho'} + salada</p></div>
+            <div class="dieta-box"><b>Lanche da tarde</b><p>2 fatias de ${pao} + ${restricao === 'vegano' ? 'hummus' : '3 ovos cozidos'}</p></div>
+            <div class="dieta-box alt"><b>Jantar</b><p>${arroz}g de arroz integral + peixe grelhado + mix de folhas</p></div>
+        </div>
+
+        <div id="opcaoC" class="tab-content">
+            <div class="dieta-box"><b>Café da manhã</b><p>Crepioca funcional (2 ovos + 30g de tapioca) — se vegano: tapioca com tofu</p></div>
+            <div class="dieta-box alt"><b>Almoço</b><p>${carbAlmoco} + ${protAlmoco} + vegetais variados</p></div>
+            <div class="dieta-box"><b>Lanche da tarde</b><p>1 maçã picada + 20g de castanhas + dose de ${shakeBase}</p></div>
+            <div class="dieta-box alt"><b>Jantar</b><p>Sopa de legumes batida com ${restricao === 'vegano' ? 'proteína de soja' : 'frango desfiado'}</p></div>
+        </div>
+
+        <div id="opcaoD" class="tab-content">
+            <div class="dieta-box"><b>Café da manhã</b><p>Bowl: 150g de iogurte magro (ou vegano) + ${aveia}g de aveia + morangos picados</p></div>
+            <div class="dieta-box alt"><b>Almoço</b><p>${batataDoce}g de mandioca cozida + ${protAlmoco} + aspargos</p></div>
+            <div class="dieta-box"><b>Lanche da tarde</b><p>Tomates cereja + cubos de queijo magro (ou tofu) + 1 torrada de arroz</p></div>
+            <div class="dieta-box alt"><b>Jantar</b><p>Wrap leve com folha de couve ou Rap10 integral recheado com proteína e rúcula</p></div>
+        </div>
+    `;
+    document.getElementById('cardapio-conteudo').innerHTML = cardapioHTML;
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+
+    document.getElementById('saudacao').innerText = `Consultoria: ${nome}`;
+
+    const kcalPct = Math.min(kcal / 4000, 1);
+    const pPct = Math.min(pG / 260, 1);
+    const cPct = Math.min(cG / 500, 1);
+    document.getElementById('macro-grid').innerHTML =
+        ring(kcalPct, 'var(--accent)', 'Kcal / dia', Math.round(kcal)) +
+        ring(pPct, 'var(--primary)', 'Proteína', Math.round(pG) + 'g') +
+        ring(cPct, 'var(--gold)', 'Carbo', Math.round(cG) + 'g');
+
+    document.getElementById('info-usuario-final').innerHTML = `
+        • <b>Atleta:</b> ${nome} | ${genero === 'f' ? 'Feminino' : 'Masculino'} | ${peso}kg | ${altura}cm<br>
+        • <b>Restrições:</b> ${restricao.toUpperCase()}<br>
+        • <b>Preferências adaptadas:</b> ${prefs || "Nenhuma informada"}<br>
+        • <b>Rotina:</b> ${agendaResumo || "Não informada"}
+    `;
+
+    const h = JSON.parse(mem.get('fit_hist_vElite') || '[]');
+    h.unshift({ d: new Date().toLocaleDateString('pt-BR'), p: peso, k: Math.round(kcal) });
+    mem.set('fit_hist_vElite', JSON.stringify(h.slice(0, 5)));
+
+    const agenda = {};
+    dias.forEach(dia => { agenda[dia] = document.getElementById(`in_${dia}`).value.trim(); });
+    salvarNoSupabase({
+        nome, genero, peso, altura, idade, objetivo, restricao,
+        preferencias: prefs,
+        agenda,
+        kcal: Math.round(kcal),
+        proteina_g: Math.round(pG),
+        carbo_g: Math.round(cG),
+        consentimento: true,
+    });
+
+    document.getElementById('form-dieta').style.display = 'none';
+    document.getElementById('resultado').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    exibirHistorico();
+}
+
+function exibirHistorico() {
+    const h = JSON.parse(mem.get('fit_hist_vElite') || '[]');
+    const el = document.getElementById('lista-historico');
+    if (!h.length) {
+        el.innerHTML = `<div class="hist-empty">Suas últimas consultas aparecerão aqui.</div>`;
+        return;
+    }
+    el.innerHTML = h.map(i => `
+        <div class="hist-item"><span>${i.d}</span><strong>${i.p}kg · ${i.k} kcal</strong></div>
+    `).join('');
+}
+</script>
+</body>
+</html>

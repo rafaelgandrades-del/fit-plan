@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>FitPlan Elite — Painel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --ink: #10201A; --ink-soft: #5C7069; --bg: #EFF3F0; --card: #FFFFFF;
+        --line: rgba(16,32,26,0.08); --primary: #0B6E52; --primary-d: #084F3B;
+        --accent: #FF5B35; --accent-d: #E14722;
+        --shadow: 0 1px 2px rgba(16,32,26,0.04), 0 8px 24px -12px rgba(16,32,26,0.18);
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Work Sans', sans-serif; background: var(--bg); color: var(--ink); margin: 0; padding: 24px 16px 60px; }
+    .container { max-width: 1100px; margin: auto; }
+    h1 { font-family: 'Bebas Neue', sans-serif; font-size: 36px; margin: 0 0 20px; }
+    h1 span { color: var(--primary); }
+    .card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 20px; }
+    #login { max-width: 360px; }
+    #login input { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px; font: inherit; background: var(--bg); }
+    button { padding: 11px 16px; border: none; border-radius: 10px; font: inherit; font-weight: 600; cursor: pointer; background: var(--primary); color: #fff; }
+    button.ghost { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); }
+    button.danger { background: transparent; color: var(--accent-d); border: 1px solid #FFD9CB; padding: 6px 10px; font-size: 12px; }
+    .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+    .toolbar input { flex: 1; min-width: 200px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font: inherit; }
+    .muted { color: var(--ink-soft); font-size: 13px; }
+    .erro { color: var(--accent-d); font-size: 13px; margin-top: 8px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+    td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    details summary { cursor: pointer; color: var(--primary); }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>FitPlan <span>Elite</span> — Painel</h1>
+
+    <div id="login" class="card" style="display:none">
+        <p class="muted" style="margin-top:0">Entre com o usuário admin criado no Supabase.</p>
+        <input id="email" type="email" placeholder="E-mail" autocomplete="username">
+        <input id="senha" type="password" placeholder="Senha" autocomplete="current-password">
+        <button onclick="entrar()">Entrar</button>
+        <div id="login-erro" class="erro"></div>
+    </div>
+
+    <div id="painel" style="display:none">
+        <div class="toolbar">
+            <input id="busca" placeholder="Buscar por nome…" oninput="render()">
+            <button class="ghost" onclick="carregar()">Atualizar</button>
+            <button class="ghost" onclick="exportarCSV()">Exportar CSV</button>
+            <button class="ghost" onclick="sair()">Sair</button>
+        </div>
+        <p id="resumo" class="muted"></p>
+        <div class="card table-wrap">
+            <table>
+                <thead><tr>
+                    <th>Data</th><th>Nome</th><th>Sexo</th><th>Peso</th><th>Altura</th><th>Idade</th>
+                    <th>Objetivo</th><th>Restrição</th><th>Kcal</th><th>Prot.</th><th>Carbo</th><th>Detalhes</th><th></th>
+                </tr></thead>
+                <tbody id="linhas"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const cfg = window.FITPLAN_CONFIG;
+const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+let dados = [];
+
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function iniciar() {
+    const { data } = await sb.auth.getSession();
+    if (data.session) { mostrarPainel(); } else { document.getElementById('login').style.display = 'block'; }
+}
+
+async function entrar() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('senha').value;
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) { document.getElementById('login-erro').textContent = 'Login falhou: ' + error.message; return; }
+    mostrarPainel();
+}
+
+async function sair() { await sb.auth.signOut(); location.reload(); }
+
+function mostrarPainel() {
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('painel').style.display = 'block';
+    carregar();
+}
+
+async function carregar() {
+    const { data, error } = await sb.from('consultas').select('*').order('criado_em', { ascending: false });
+    if (error) { document.getElementById('resumo').textContent = 'Erro ao carregar: ' + error.message; return; }
+    dados = data;
+    render();
+}
+
+function render() {
+    const q = document.getElementById('busca').value.toLowerCase();
+    const lista = dados.filter(r => r.nome.toLowerCase().includes(q));
+    const clientes = new Set(dados.map(r => r.nome.toLowerCase())).size;
+    document.getElementById('resumo').textContent =
+        dados.length ? `${dados.length} consulta(s) de ${clientes} cliente(s).`
+        :'Nenhuma consulta ainda. (Se você já enviou alguma, confira se o e-mail no supabase.sql é o mesmo do seu login.)';
+    document.getElementById('linhas').innerHTML = lista.map(r => {
+        const agenda = r.agenda ? Object.entries(r.agenda).filter(([, v]) => v).map(([d, v]) => `${esc(d)}: ${esc(v)}`).join('<br>') : '';
+        return `<tr>
+            <td class="num">${new Date(r.criado_em).toLocaleString('pt-BR')}</td>
+            <td><b>${esc(r.nome)}</b></td>
+            <td>${r.genero === 'f' ? 'F' : 'M'}</td>
+            <td class="num">${esc(r.peso)} kg</td>
+            <td class="num">${esc(r.altura)} cm</td>
+            <td class="num">${esc(r.idade)}</td>
+            <td>${esc(r.objetivo)}</td>
+            <td>${esc(r.restricao)}</td>
+            <td class="num">${esc(r.kcal)}</td>
+            <td class="num">${esc(r.proteina_g)} g</td>
+            <td class="num">${esc(r.carbo_g)} g</td>
+            <td><details><summary>ver</summary>
+                <div class="muted"><b>Gosta de:</b> ${esc(r.preferencias) || '—'}<br><b>Treinos:</b><br>${agenda || '—'}</div>
+            </details></td>
+            <td><button class="danger" onclick="apagar(${Number(r.id)})">Apagar</button></td>
+        </tr>`;
+    }).join('');
+}
+
+async function apagar(id) {
+    if (!confirm('Apagar esta consulta permanentemente?')) return;
+    const { error } = await sb.from('consultas').delete().eq('id', id);
+    if (error) return alert('Erro: ' + error.message);
+    carregar();
+}
+
+function exportarCSV() {
+    const cols = ['criado_em','nome','genero','peso','altura','idade','objetivo','restricao','preferencias','kcal','proteina_g','carbo_g','agenda'];
+    const cel = (v) => '"' + String(typeof v === 'object' && v ? JSON.stringify(v) : (v ?? '')).replace(/"/g, '""') + '"';
+    const csv = [cols.join(';'), ...dados.map(r => cols.map(c => cel(r[c])).join(';'))].join('\r\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = `fitplan-consultas-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+}
+
+iniciar();
+</script>
+</body>
+</html>
