@@ -92,21 +92,51 @@
     }
     .input-block textarea:focus { border-color: var(--primary); }
 
-    /* ---- Weekly agenda strip ---- */
-    .agenda-strip { display: flex; gap: 6px; padding: 4px 18px 18px; }
-    .dia-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .dia-label {
-        font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.05em;
-        color: var(--ink-soft);
+    /* ---- Rotina semanal (um dia por linha) ---- */
+    .rotina { padding: 0 18px 8px; }
+    .dia-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .dia-row:last-child { border-bottom: none; }
+    .dia-top { display: flex; align-items: center; gap: 10px; }
+    .dia-label { width: 76px; flex-shrink: 0; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+    .dia-tipo {
+        flex: 1; min-width: 0; text-align: left; font-size: 14px; padding: 9px 30px 9px 12px;
+        border: 1px solid var(--line); border-radius: 10px; background: var(--bg)
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C7069' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 12px center;
+        color: var(--ink); cursor: pointer;
     }
-    .dia-input {
-        writing-mode: vertical-rl; text-orientation: mixed;
-        width: 30px; height: 108px; background: var(--bg); border: 1px solid var(--line);
-        border-radius: 10px; font-size: 11px; color: var(--ink); text-align: center;
-        padding: 8px 0; resize: none; font-family: inherit; outline: none;
+    .dia-tipo.descanso { color: var(--ink-soft); }
+    .dia-tipo:focus, .dia-detalhe:focus { border-color: var(--primary); }
+    .dia-detalhe {
+        display: block; width: calc(100% - 86px); margin: 8px 0 0 86px; text-align: left;
+        font-size: 13.5px; padding: 8px 12px; border: 1px dashed rgba(16,32,26,0.18);
+        border-radius: 10px; background: #fff;
     }
-    .dia-input:focus { border-color: var(--primary); }
-    .dia-input::placeholder { color: #C3CDC8; font-size: 10px; }
+    .dia-detalhe[hidden] { display: none; }
+    .gerador-toggle {
+        display: block; width: calc(100% - 36px); margin: 4px 18px 16px; padding: 13px;
+        background: #E7F3EE; color: var(--primary-d); border: 1px dashed var(--primary);
+        border-radius: 12px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+    .gerador { margin: 0 18px 18px; padding: 14px; background: var(--bg); border-radius: 14px; }
+    .gerador[hidden] { display: none; }
+    .gerador p { margin: 0 0 8px; font-size: 13px; font-weight: 600; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .chip { width: auto; flex-shrink: 0; }
+    .chip input { display: none; }
+    .chip span {
+        display: inline-block; padding: 8px 12px; border-radius: 999px; font-size: 13px; font-weight: 600;
+        background: #fff; border: 1px solid var(--line); color: var(--ink-soft); cursor: pointer; user-select: none;
+    }
+    .chip input:checked + span { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .gerador .primary-btn { margin: 4px 0 0; padding: 14px; font-size: 14px; background: var(--primary); box-shadow: none; }
+    .gerador-msg { font-size: 12px; color: var(--ink-soft); margin-top: 8px; line-height: 1.5; }
+    /* ---- Treino da semana (resultado) ---- */
+    .treino-dia { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .treino-dia:last-child { border-bottom: none; }
+    .treino-dia b { font-size: 13.5px; }
+    .treino-dia .tag { font-size: 11px; font-weight: 700; color: var(--primary-d); background: #E7F3EE; border-radius: 6px; padding: 2px 7px; margin-left: 6px; }
+    .treino-dia ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+    .treino-obs { font-size: 12px; color: var(--ink-soft); margin: 4px 0 0; line-height: 1.5; }
 
     /* ---- Buttons ---- */
     button.primary-btn {
@@ -293,9 +323,22 @@
         </div>
 
         <div class="surface">
-            <div class="section-title">🗓️ Agenda de treinos</div>
-            <div class="hint">Escreva o treino de cada dia (ex: <i>musculação</i>, <i>corrida + muay thai</i>). Deixe vazio ou escreva <i>descanso</i> nos dias livres.</div>
-            <div class="agenda-strip" id="agenda-inputs"></div>
+            <div class="section-title">🗓️ Rotina semanal</div>
+            <div class="hint">Escolha o que você faz em cada dia. Se quiser, detalhe (ex: <i>peito e tríceps</i>, <i>futebol</i>).</div>
+            <div class="rotina" id="agenda-inputs"></div>
+
+            <button type="button" class="gerador-toggle" onclick="toggleGerador()">✨ Montar minha rotina de treinos</button>
+            <div class="gerador" id="gerador" hidden>
+                <p>Em quais dias você pode ir à academia?</p>
+                <div class="chips" id="gerador-dias"></div>
+                <p>Seu nível na musculação</p>
+                <div class="chips">
+                    <label class="chip"><input type="radio" name="nivel" value="iniciante" checked><span>Iniciante</span></label>
+                    <label class="chip"><input type="radio" name="nivel" value="intermediario"><span>Intermediário / avançado</span></label>
+                </div>
+                <button type="button" class="primary-btn" onclick="gerarRotina()">Gerar rotina</button>
+                <div class="gerador-msg">Dias com esporte, corrida ou outra atividade já escolhida são mantidos. A divisão dos músculos se ajusta à quantidade de dias livres.</div>
+            </div>
         </div>
 
         <div class="surface surface-pad">
@@ -342,6 +385,11 @@
         <div class="coach-block">
             <div class="section-title">🏅 Feedback esportivo</div>
             <div id="feedback-coach" class="coach-block-body"></div>
+        </div>
+
+        <div class="bloco" id="treino-bloco" style="display:none">
+            <div class="section-title" style="padding-left:0;">🏋️ Seu treino da semana</div>
+            <div id="treino-semana"></div>
         </div>
 
         <div class="bloco">
@@ -433,16 +481,186 @@ const fmtPeso = (g) => g >= 1000 ? `${(g / 1000).toFixed(1).replace('.', ',')} k
 
 let ultimoPlanoTexto = "";
 
+// ---------------- Rotina semanal ----------------
+const nomesDias = { Seg: 'Segunda', Ter: 'Terça', Qua: 'Quarta', Qui: 'Quinta', Sex: 'Sexta', 'Sáb': 'Sábado', Dom: 'Domingo' };
+const tiposTreino = {
+    descanso:   { label: 'Descanso',                   ph: '' },
+    musculacao: { label: 'Academia / musculação',      ph: 'Ex: peito e tríceps (opcional)' },
+    corrida:    { label: 'Corrida / caminhada',        ph: 'Ex: 5 km, 40 min (opcional)' },
+    esporte:    { label: 'Esporte',                    ph: 'Qual? Ex: futebol, vôlei, jiu-jitsu' },
+    funcional:  { label: 'Funcional / crossfit',       ph: 'Detalhe (opcional)' },
+    bike:       { label: 'Bike / spinning',            ph: 'Detalhe (opcional)' },
+    natacao:    { label: 'Natação',                    ph: 'Detalhe (opcional)' },
+    duplo:      { label: 'Dois treinos no dia',        ph: 'Quais? Ex: academia + corrida' },
+};
+
+// Divisões de treino por quantidade de dias (padrões usuais de academia)
+const divisoes = {
+    iniciante: {
+        1: ['Corpo inteiro'],
+        2: ['Corpo inteiro', 'Corpo inteiro'],
+        3: ['Corpo inteiro', 'Corpo inteiro', 'Corpo inteiro'],
+        4: ['Superiores', 'Inferiores', 'Superiores', 'Inferiores'],
+        5: ['Peito e tríceps', 'Costas e bíceps', 'Pernas', 'Ombros e abdômen', 'Corpo inteiro'],
+        6: ['Peito e tríceps', 'Costas e bíceps', 'Pernas', 'Peito e tríceps', 'Costas e bíceps', 'Posterior e glúteos'],
+    },
+    intermediario: {
+        1: ['Corpo inteiro'],
+        2: ['Superiores', 'Inferiores'],
+        3: ['Peito e tríceps', 'Costas e bíceps', 'Pernas e ombros'],
+        4: ['Peito e tríceps', 'Costas e bíceps', 'Pernas', 'Ombros e abdômen'],
+        5: ['Peito', 'Costas', 'Pernas', 'Ombros e abdômen', 'Bíceps e tríceps'],
+        6: ['Peito e tríceps', 'Costas e bíceps', 'Pernas', 'Peito e ombros', 'Costas e braços', 'Posterior e glúteos'],
+    },
+};
+const exercicios = {
+    'Corpo inteiro':       ['Agachamento livre ou no smith', 'Supino reto', 'Puxada frontal', 'Desenvolvimento com halteres', 'Prancha abdominal'],
+    'Superiores':          ['Supino reto', 'Puxada frontal', 'Desenvolvimento com halteres', 'Rosca direta', 'Tríceps no pulley'],
+    'Inferiores':          ['Agachamento', 'Leg press', 'Stiff', 'Cadeira extensora', 'Panturrilha em pé'],
+    'Peito e tríceps':     ['Supino reto', 'Supino inclinado com halteres', 'Crucifixo ou peck deck', 'Tríceps no pulley', 'Tríceps francês'],
+    'Costas e bíceps':     ['Puxada frontal', 'Remada curvada', 'Remada baixa', 'Rosca direta', 'Rosca martelo'],
+    'Pernas':              ['Agachamento', 'Leg press', 'Cadeira extensora', 'Mesa flexora', 'Panturrilha'],
+    'Pernas e ombros':     ['Agachamento', 'Leg press', 'Mesa flexora', 'Desenvolvimento com halteres', 'Elevação lateral'],
+    'Ombros e abdômen':    ['Desenvolvimento', 'Elevação lateral', 'Elevação frontal', 'Abdominal infra', 'Prancha'],
+    'Peito':               ['Supino reto', 'Supino inclinado', 'Crucifixo inclinado', 'Crossover', 'Flexão de braço'],
+    'Costas':              ['Barra fixa ou puxada', 'Remada curvada', 'Remada unilateral', 'Pulldown', 'Levantamento terra leve'],
+    'Bíceps e tríceps':    ['Rosca direta', 'Rosca alternada', 'Rosca martelo', 'Tríceps testa', 'Tríceps corda'],
+    'Peito e ombros':      ['Supino inclinado', 'Crucifixo', 'Desenvolvimento', 'Elevação lateral', 'Face pull'],
+    'Costas e braços':     ['Remada baixa', 'Puxada triângulo', 'Rosca direta', 'Tríceps pulley', 'Rosca concentrada'],
+    'Posterior e glúteos': ['Stiff', 'Mesa flexora', 'Elevação pélvica', 'Cadeira abdutora', 'Panturrilha sentado'],
+};
+
+function criarLinhaDia(dia, salvo) {
+    const row = document.createElement('div');
+    row.className = 'dia-row';
+    const opts = Object.entries(tiposTreino).map(([v, t]) =>
+        `<option value="${v}"${v === salvo.tipo ? ' selected' : ''}>${t.label}</option>`).join('');
+    row.innerHTML = `
+        <div class="dia-top">
+            <span class="dia-label">${nomesDias[dia]}</span>
+            <select id="tipo_${dia}" class="dia-tipo" aria-label="Atividade de ${nomesDias[dia]}">${opts}</select>
+        </div>
+        <input id="det_${dia}" class="dia-detalhe" type="text" maxlength="80" value="${esc(salvo.detalhe)}">`;
+    const sel = row.querySelector('select');
+    sel.addEventListener('change', () => atualizarLinhaDia(dia));
+    return row;
+}
+
+function atualizarLinhaDia(dia) {
+    const tipo = document.getElementById(`tipo_${dia}`).value;
+    const det = document.getElementById(`det_${dia}`);
+    document.getElementById(`tipo_${dia}`).classList.toggle('descanso', tipo === 'descanso');
+    det.hidden = tipo === 'descanso';
+    det.placeholder = tiposTreino[tipo].ph;
+}
+
+// Lê o que está salvo no navegador (aceita o formato antigo, que era só texto)
+function lerSalvo(dia) {
+    const bruto = mem.get(`treino_${dia}`);
+    if (!bruto) return { tipo: 'descanso', detalhe: '' };
+    try {
+        const o = JSON.parse(bruto);
+        if (o && tiposTreino[o.tipo]) return { tipo: o.tipo, detalhe: o.detalhe || '' };
+    } catch (e) {}
+    const t = String(bruto).trim();
+    if (!t || t.toLowerCase() === 'descanso') return { tipo: 'descanso', detalhe: '' };
+    return { tipo: adivinharTipo(t), detalhe: t };
+}
+
+function adivinharTipo(texto) {
+    const t = texto.toLowerCase();
+    if (t.includes('+')) return 'duplo';
+    if (/corr|caminh|trot/.test(t)) return 'corrida';
+    if (/bike|bicicl|pedal|spinning|cicl/.test(t)) return 'bike';
+    if (/nata|pisc/.test(t)) return 'natacao';
+    if (/funcional|cross|hiit/.test(t)) return 'funcional';
+    if (/fute|vôlei|volei|basq|tênis|tenis|jiu|muay|box|luta|judô|judo|karat|handeb|beach|padel|esport/.test(t)) return 'esporte';
+    return 'musculacao';
+}
+
+function lerAgenda() {
+    return dias.map(dia => ({
+        dia,
+        tipo: document.getElementById(`tipo_${dia}`).value,
+        detalhe: document.getElementById(`det_${dia}`).value.trim(),
+    }));
+}
+
+function textoDia(d) {
+    if (d.tipo === 'descanso') return '';
+    const base = tiposTreino[d.tipo].label;
+    return d.detalhe ? `${base}: ${d.detalhe}` : base;
+}
+
+function toggleGerador() {
+    const g = document.getElementById('gerador');
+    g.hidden = !g.hidden;
+    if (!g.hidden) {
+        // pré-marca os dias que já estão como academia
+        lerAgenda().forEach(d => {
+            document.getElementById(`gd_${d.dia}`).checked = d.tipo === 'musculacao';
+        });
+    }
+}
+
+function gerarRotina() {
+    const nivel = document.querySelector('input[name="nivel"]:checked').value;
+    const escolhidos = dias.filter(dia => document.getElementById(`gd_${dia}`).checked);
+    // dias marcados que já têm outra atividade (esporte, corrida...) são mantidos
+    const livres = escolhidos.filter(dia => {
+        const tipo = document.getElementById(`tipo_${dia}`).value;
+        return tipo === 'descanso' || tipo === 'musculacao';
+    });
+    if (!livres.length) return alert('Marque pelo menos um dia disponível para a academia.');
+    const n = Math.min(livres.length, 6);
+    const divisao = divisoes[nivel][n];
+    livres.forEach((dia, i) => {
+        const tipoEl = document.getElementById(`tipo_${dia}`);
+        const detEl = document.getElementById(`det_${dia}`);
+        if (i < n) { tipoEl.value = 'musculacao'; detEl.value = divisao[i]; }
+        else { tipoEl.value = 'funcional'; detEl.value = 'Cardio leve + mobilidade'; } // 7º dia: ativo leve
+        atualizarLinhaDia(dia);
+    });
+    // dias desmarcados que estavam como academia viram descanso
+    dias.filter(dia => !escolhidos.includes(dia)).forEach(dia => {
+        if (document.getElementById(`tipo_${dia}`).value === 'musculacao') {
+            document.getElementById(`tipo_${dia}`).value = 'descanso';
+            document.getElementById(`det_${dia}`).value = '';
+            atualizarLinhaDia(dia);
+        }
+    });
+    document.getElementById('gerador').hidden = true;
+    document.getElementById('agenda-inputs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function montarTreinoSemana(agenda, objetivo) {
+    const series = objetivo === 'emagrecer'
+        ? '3 séries de 12–15 repetições, descanso de 45–60s. Termine com 20 min de cardio.'
+        : (objetivo === 'ganhar'
+            ? '3–4 séries de 8–12 repetições, descanso de 60–90s. Aumente a carga aos poucos.'
+            : '3 séries de 10–12 repetições, descanso de 60s.');
+    const ativos = agenda.filter(d => d.tipo !== 'descanso');
+    if (!ativos.length) return '';
+    let temMusc = false;
+    const html = agenda.map(d => {
+        if (d.tipo === 'descanso') return `<div class="treino-dia"><b>${nomesDias[d.dia]}</b><span class="tag" style="background:#F1F1F1;color:var(--ink-soft)">Descanso</span></div>`;
+        const lista = d.tipo === 'musculacao' ? exercicios[d.detalhe] : null;
+        if (lista) temMusc = true;
+        return `<div class="treino-dia"><b>${nomesDias[d.dia]}</b><span class="tag">${esc(d.detalhe || tiposTreino[d.tipo].label)}</span>
+            ${lista ? `<ul>${lista.map(e => `<li>${e}</li>`).join('')}</ul>` : (d.detalhe && d.tipo !== 'musculacao' ? `<div class="treino-obs">${esc(tiposTreino[d.tipo].label)}</div>` : '')}
+        </div>`;
+    }).join('');
+    return html + (temMusc ? `<p class="treino-obs" style="margin-top:10px">📌 ${series} Na dúvida sobre a execução, peça orientação ao professor da academia.</p>` : '');
+}
+
 window.onload = () => {
     const container = document.getElementById('agenda-inputs');
+    const chips = document.getElementById('gerador-dias');
     dias.forEach(dia => {
-        const salvo = mem.get(`treino_${dia}`) || "";
-        const col = document.createElement('div');
-        col.className = 'dia-col';
-        col.innerHTML = `
-            <span class="dia-label">${dia}</span>
-            <textarea id="in_${dia}" class="dia-input" placeholder="treino">${esc(salvo)}</textarea>`;
-        container.appendChild(col);
+        container.appendChild(criarLinhaDia(dia, lerSalvo(dia)));
+        atualizarLinhaDia(dia);
+        chips.insertAdjacentHTML('beforeend',
+            `<label class="chip"><input type="checkbox" id="gd_${dia}"><span>${nomesDias[dia].slice(0, 3)}</span></label>`);
     });
     if (mem.get('fit_nome')) document.getElementById('nome').value = mem.get('fit_nome');
     if (mem.get('fit_atividade')) document.getElementById('atividade').value = mem.get('fit_atividade');
@@ -503,14 +721,15 @@ function gerarPlano() {
     let agendaStr = "";
     let agendaResumo = "";
 
-    dias.forEach(dia => {
-        const t = document.getElementById(`in_${dia}`).value;
-        mem.set(`treino_${dia}`, t);
-        if (t.trim() && t.toLowerCase() !== "descanso") {
+    const agendaDias = lerAgenda();
+    agendaDias.forEach(d => {
+        mem.set(`treino_${d.dia}`, JSON.stringify({ tipo: d.tipo, detalhe: d.detalhe }));
+        if (d.tipo !== 'descanso') {
+            const t = textoDia(d);
             treinosTotais++;
             agendaStr += t.toLowerCase() + " ";
-            agendaResumo += `${dia}: ${t} | `;
-            if (t.includes("+") || t.toLowerCase().includes(" e ")) diasDuplos++;
+            agendaResumo += `${nomesDias[d.dia]}: ${t} | `;
+            if (d.tipo === 'duplo' || d.detalhe.includes('+')) diasDuplos++;
         }
     });
 
@@ -796,7 +1015,11 @@ function gerarPlano() {
     mem.set('fit_hist_vElite', JSON.stringify(h.slice(0, 5)));
 
     const agenda = {};
-    dias.forEach(dia => { agenda[dia] = document.getElementById(`in_${dia}`).value.trim(); });
+    agendaDias.forEach(d => { agenda[d.dia] = textoDia(d); });
+
+    const treinoHTML = montarTreinoSemana(agendaDias, objetivo);
+    document.getElementById('treino-semana').innerHTML = treinoHTML;
+    document.getElementById('treino-bloco').style.display = treinoHTML ? 'block' : 'none';
     salvarNoSupabase({
         nome, genero, peso, altura, idade, objetivo, restricao,
         preferencias: prefs,
