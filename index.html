@@ -594,17 +594,23 @@ function gerarPlano() {
     const aveia = Math.min(aveiaBruta, 80);
     const frango = Math.min(Math.round((pG * 0.25) / 0.25), 250);
     const carneMagra = Math.min(Math.round((pG * 0.25) / 0.26), 250);
-    const tofu = Math.min(Math.round((pG * 0.25) / 0.08), 400);
+    // Proteína vegana: o tofu (~8% de proteína) exigia até 400g por refeição.
+    // Agora cada refeição principal combina proteína texturizada de soja
+    // (PTS, ~50% de proteína no peso seco) com grão-de-bico cozido (~9%):
+    // ~70% da proteína da refeição vem da soja e ~30% do grão-de-bico.
+    const soja = Math.min(Math.round((pG * 0.25 * 0.7) / 0.50), 80);   // g de PTS seca
+    const grao = Math.min(Math.round((pG * 0.25 * 0.3) / 0.09), 200);  // g de grão-de-bico cozido
+    const protVegana = `${soja}g de Proteína de Soja (peso seco, hidratada e refogada) + ${grao}g de Grão-de-Bico`;
 
     if (aveiaBruta > 80) {
         avisoMacro += `<div class="aviso-box">⚠️ Sua meta calórica é alta em relação ao peso corporal — limitamos a aveia do café da manhã a uma porção realista (80g) e sugerimos completar a diferença com mais 1 fruta ou 2 fatias de pão integral no mesmo horário.</div>`;
     }
 
     let carbAlmoco = `${arroz}g de Arroz Integral`;
-    let protAlmoco = restricao === 'vegano' ? `${tofu}g de Tofu Grelhado` : `${frango}g de Peito de Frango`;
+    let protAlmoco = restricao === 'vegano' ? protVegana : `${frango}g de Peito de Frango`;
     let docePermitido = "1 Fruta Fresca";
     let lancheCustom = "Shake: 1 Banana + Aveia + Proteína";
-    let jantarCustom = restricao === 'vegano' ? `${tofu}g de Tofu` : `${frango}g de Frango Desfiado`;
+    let jantarCustom = restricao === 'vegano' ? `Escondidinho de ${soja}g de Proteína de Soja com ${grao}g de Grão-de-Bico` : `${frango}g de Frango Desfiado`;
     let fbkCustom = "";
 
     if (prefs.includes("batata doce") || prefs.includes("mandioca")) {
@@ -625,12 +631,17 @@ function gerarPlano() {
     }
 
     if (prefs.includes("hambúrguer") || prefs.includes("hamburguer")) {
-        jantarCustom = `Hambúrguer Caseiro Fit (${carneMagra}g de carne magra grelhada) no prato com salada`;
-        fbkCustom += `🍔 <b>Versão fit de elite:</b> seu desejo por hambúrguer foi adaptado — carne magra pura, sem óleo, com queijo magro.<br><br>`;
+        if (restricao === 'vegano') {
+            jantarCustom = `Hambúrguer Vegano Caseiro (${grao}g de grão-de-bico amassado + ${soja}g de proteína de soja) no prato com salada`;
+            fbkCustom += `🍔 <b>Versão fit de elite:</b> seu desejo por hambúrguer foi adaptado — hambúrguer caseiro de grão-de-bico com proteína de soja, assado sem óleo.<br><br>`;
+        } else {
+            jantarCustom = `Hambúrguer Caseiro Fit (${carneMagra}g de carne magra grelhada) no prato com salada`;
+            fbkCustom += `🍔 <b>Versão fit de elite:</b> seu desejo por hambúrguer foi adaptado — carne magra pura, sem óleo, com queijo magro.<br><br>`;
+        }
     }
 
     if (prefs.includes("pizza")) {
-        jantarCustom = `Pizza Fit de Frigideira (massa de Rap10 integral ou couve-flor, molho natural, queijo magro e frango desfiado)`;
+        jantarCustom = `Pizza Fit de Frigideira (massa de Rap10 integral ou couve-flor, molho natural, ${restricao === 'vegano' ? `queijo vegano e ${soja}g de proteína de soja refogada` : 'queijo magro e frango desfiado'})`;
         fbkCustom += `🍕 <b>Noite de pizza saudável:</b> jantar adaptado para uma versão funcional, de baixa caloria e alta proteína.<br><br>`;
     }
 
@@ -646,7 +657,7 @@ function gerarPlano() {
         compras[item].qtd += qtd * 7;
     };
     // Café da manhã
-    if (vegano) add('Tofu', 100); else add('Ovos', 3, 'un');
+    if (vegano) add('Grão-de-bico (cozido)', 60); else add('Ovos', 3, 'un');
     add(restricao === 'gluten' ? 'Pão sem glúten (fatias)' : 'Pão integral (fatias)', 2, 'un');
     add('Frutas variadas', 1, 'un');
     // Almoço — carboidrato
@@ -655,7 +666,8 @@ function gerarPlano() {
     else if (prefs.includes("macarrão") || prefs.includes("macarrao") || prefs.includes("massa")) add('Macarrão integral (cozido)', Math.round(arroz * 0.9));
     else add('Arroz integral (cozido)', arroz);
     // Almoço — proteína
-    if (vegano) add('Tofu', tofu);
+    const addVegana = () => { add('Proteína de soja (seca)', soja); add('Grão-de-bico (cozido)', grao); };
+    if (vegano) addVegana();
     else if (prefs.includes("carne") || prefs.includes("patinho") || prefs.includes("bife")) add('Patinho / carne magra', carneMagra);
     else add('Peito de frango', frango);
     // Sobremesa
@@ -671,8 +683,10 @@ function gerarPlano() {
         add(vegano ? 'Proteína de ervilha (doses)' : (restricao === 'lactose' ? 'Whey zero lactose (doses)' : 'Whey protein (doses)'), 1, 'un');
     }
     // Jantar
-    if (prefs.includes("hambúrguer") || prefs.includes("hamburguer")) { if (vegano) add('Tofu', tofu); else add('Patinho / carne magra', carneMagra); }
-    else if (vegano) add('Tofu', tofu);
+    // (pizza tem prioridade sobre hambúrguer, igual ao cardápio)
+    if (prefs.includes("pizza")) { if (vegano) add('Proteína de soja (seca)', soja); else add('Peito de frango', frango); }
+    else if (prefs.includes("hambúrguer") || prefs.includes("hamburguer")) { if (vegano) addVegana(); else add('Patinho / carne magra', carneMagra); }
+    else if (vegano) addVegana();
     else add('Peito de frango', frango);
     add('Legumes (brócolis, chuchu etc.)', 200);
     add('Folhas para salada', 100);
@@ -693,7 +707,7 @@ function gerarPlano() {
 
     let cardapioHTML = `
         <div id="opcaoA" class="tab-content active">
-            <div class="dieta-box"><b>Café da manhã</b><p>${restricao === 'vegano' ? 'Mexido de Tofu' : '3 Ovos Mexidos'} + 2 fatias de ${pao} + 1 fruta de sua escolha</p></div>
+            <div class="dieta-box"><b>Café da manhã</b><p>${restricao === 'vegano' ? '4 colheres de Homus (pasta de grão-de-bico)' : '3 Ovos Mexidos'} + 2 fatias de ${pao} + 1 fruta de sua escolha</p></div>
             <div class="dieta-box alt"><b>Almoço (adaptado)</b><p>${carbAlmoco} + ${protAlmoco} + salada verde livre + <b>sobremesa:</b> ${docePermitido}</p></div>
             <div class="dieta-box"><b>Lanche da tarde</b><p>${lancheCustom}</p></div>
             <div class="dieta-box alt"><b>Jantar (adaptado)</b><p>${jantarCustom} + legumes no vapor (brócolis/chuchu)</p></div>
@@ -701,13 +715,13 @@ function gerarPlano() {
 
         <div id="opcaoB" class="tab-content">
             <div class="dieta-box"><b>Café da manhã</b><p>Vitamina prática: 1 banana + ${aveia}g de aveia + 30g de ${shakeBase}</p></div>
-            <div class="dieta-box alt"><b>Almoço</b><p>${batataDoce}g de batata doce + ${restricao === 'vegano' ? '180g de grão de bico' : carneMagra + 'g de patinho'} + salada</p></div>
+            <div class="dieta-box alt"><b>Almoço</b><p>${batataDoce}g de batata doce + ${restricao === 'vegano' ? protVegana : carneMagra + 'g de patinho'} + salada</p></div>
             <div class="dieta-box"><b>Lanche da tarde</b><p>2 fatias de ${pao} + ${restricao === 'vegano' ? 'hummus' : '3 ovos cozidos'}</p></div>
-            <div class="dieta-box alt"><b>Jantar</b><p>${arroz}g de arroz integral + peixe grelhado + mix de folhas</p></div>
+            <div class="dieta-box alt"><b>Jantar</b><p>${arroz}g de arroz integral + ${restricao === 'vegano' ? protVegana : 'peixe grelhado'} + mix de folhas</p></div>
         </div>
 
         <div id="opcaoC" class="tab-content">
-            <div class="dieta-box"><b>Café da manhã</b><p>Crepioca funcional (2 ovos + 30g de tapioca) — se vegano: tapioca com tofu</p></div>
+            <div class="dieta-box"><b>Café da manhã</b><p>${restricao === 'vegano' ? '30g de tapioca recheada com homus e tomate' : 'Crepioca funcional (2 ovos + 30g de tapioca)'}</p></div>
             <div class="dieta-box alt"><b>Almoço</b><p>${carbAlmoco} + ${protAlmoco} + vegetais variados</p></div>
             <div class="dieta-box"><b>Lanche da tarde</b><p>1 maçã picada + 20g de castanhas + dose de ${shakeBase}</p></div>
             <div class="dieta-box alt"><b>Jantar</b><p>Sopa de legumes batida com ${restricao === 'vegano' ? 'proteína de soja' : 'frango desfiado'}</p></div>
@@ -716,7 +730,7 @@ function gerarPlano() {
         <div id="opcaoD" class="tab-content">
             <div class="dieta-box"><b>Café da manhã</b><p>Bowl: 150g de iogurte magro (ou vegano) + ${aveia}g de aveia + morangos picados</p></div>
             <div class="dieta-box alt"><b>Almoço</b><p>${batataDoce}g de mandioca cozida + ${protAlmoco} + aspargos</p></div>
-            <div class="dieta-box"><b>Lanche da tarde</b><p>Tomates cereja + cubos de queijo magro (ou tofu) + 1 torrada de arroz</p></div>
+            <div class="dieta-box"><b>Lanche da tarde</b><p>Tomates cereja + ${restricao === 'vegano' ? 'grão-de-bico tostado (40g)' : 'cubos de queijo magro'} + 1 torrada de arroz</p></div>
             <div class="dieta-box alt"><b>Jantar</b><p>Wrap leve com folha de couve ou Rap10 integral recheado com proteína e rúcula</p></div>
         </div>
     `;
