@@ -5,4 +5,7 @@
 window.FITPLAN_CONFIG = {
     SUPABASE_URL: 'https://gxafmgxjjkrzhhcfbjbq.supabase.co',
     SUPABASE_ANON_KEY: 'sb_publishable_JddmW5Ab0-8LXYpNZmI2HA_1Z5vBTJl',
+    // Seu WhatsApp com DDI + DDD, só números (ex: '5511999998888').
+    // Se preenchido, aparece o botão "Falar com o consultor" no resultado.
+    WHATSAPP_CONSULTOR: '',
 };

@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>FitPlan Smart — Elite</title>
+<title>FitPlan Elite — Consultoria Nutricional</title>
+<meta name="description" content="Monte seu plano alimentar personalizado em 1 minuto: calorias, macros, cardápios adaptados ao seu gosto e lista de compras da semana.">
+<meta name="theme-color" content="#0B6E52">
+<meta property="og:title" content="FitPlan Elite — Consultoria Nutricional">
+<meta property="og:description" content="Plano alimentar personalizado: calorias, macros, cardápios adaptados ao seu gosto e lista de compras.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230B6E52'/%3E%3Cpath d='M50 30V50M50 50L41 56M50 50L59 56' stroke='%23EAF6EF' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M40 62C40 62 43 70 50 70C57 70 60 62 60 62' stroke='%23FF5B35' stroke-width='6' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -190,6 +196,49 @@
         margin: 0 2px 14px; cursor: pointer;
     }
     .consent-box input { flex: none; width: 18px; height: 18px; margin-top: 1px; accent-color: var(--primary); }
+    .hint { font-size: 12px; color: var(--ink-soft); padding: 0 18px 10px; line-height: 1.5; }
+    .macro-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; }
+    .macro-card { padding: 14px 4px !important; }
+    @media (max-width: 400px) {
+        .macro-grid { gap: 6px !important; }
+        .macro-card svg { width: 54px; height: 54px; }
+        .macro-card span { font-size: 19px !important; }
+        .macro-card strong { font-size: 9px !important; }
+    }
+    @media (max-width: 340px) { .macro-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 18px; }
+    .stat {
+        background: var(--card); border-radius: 14px; padding: 12px 14px; box-shadow: var(--shadow);
+    }
+    .stat small { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+    .stat b { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .02em; font-weight: 400; }
+    .stat em { font-style: normal; font-size: 11.5px; color: var(--ink-soft); margin-left: 4px; }
+    .lista-compras { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 18px; }
+    .lista-compras li {
+        break-inside: avoid; font-size: 13.5px; padding: 7px 0; border-bottom: 1px solid var(--line);
+        display: flex; justify-content: space-between; gap: 8px;
+    }
+    .lista-compras li span:last-child { color: var(--primary-d); font-weight: 600; white-space: nowrap; }
+    @media (max-width: 400px) { .lista-compras { columns: 1; } }
+    .acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+    .acao-btn {
+        padding: 13px 8px; background: var(--card); color: var(--primary-d); border: 1px solid var(--line);
+        border-radius: 12px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: var(--shadow);
+    }
+    .cta-consultor {
+        display: block; text-align: center; margin-top: 10px; padding: 15px; border-radius: 14px;
+        background: var(--primary); color: #fff; font-weight: 700; text-decoration: none; font-size: 14.5px;
+    }
+    .disclaimer { font-size: 11px; color: var(--ink-soft); line-height: 1.5; margin: 18px 2px 0; }
+    .hist-delta { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 8px 2px; }
+    @media print {
+        body { background: #fff; padding: 0; }
+        .no-print, #historico-secao, #save-status, .tabs-menu { display: none !important; }
+        .tab-content { display: block !important; margin-bottom: 10px; }
+        .surface, .bloco, .macro-card, .stat, .coach-block { box-shadow: none !important; border: 1px solid #ddd; break-inside: avoid; }
+        .coach-block { background: #fff !important; color: var(--ink) !important; }
+        .coach-block .section-title, .coach-block-body b { color: var(--ink) !important; }
+    }
     .save-status { font-size: 12px; margin: -10px 0 16px 2px; color: var(--ink-soft); }
     .save-status.ok { color: var(--primary); }
     .save-status.erro { color: var(--accent-d); }
@@ -230,13 +279,22 @@
                     <option value="f">Feminino</option>
                 </select>
             </div>
-            <div class="input-row"><label>Peso (kg)</label><input type="number" id="peso" step="0.1" placeholder="0"></div>
-            <div class="input-row"><label>Altura (cm)</label><input type="number" id="altura" placeholder="0"></div>
-            <div class="input-row"><label>Idade</label><input type="number" id="idade" placeholder="0"></div>
+            <div class="input-row"><label>Peso (kg)</label><input type="number" id="peso" step="0.1" min="20" max="400" inputmode="decimal" placeholder="0"></div>
+            <div class="input-row"><label>Altura (cm)</label><input type="number" id="altura" min="80" max="260" inputmode="numeric" placeholder="0"></div>
+            <div class="input-row"><label>Idade</label><input type="number" id="idade" min="10" max="120" inputmode="numeric" placeholder="0"></div>
+            <div class="input-row">
+                <label>Rotina diária</label>
+                <select id="atividade">
+                    <option value="sentado">Trabalho sentado</option>
+                    <option value="em_pe">Fico muito em pé / ando bastante</option>
+                    <option value="fisico">Trabalho braçal / físico</option>
+                </select>
+            </div>
         </div>
 
         <div class="surface">
             <div class="section-title">🗓️ Agenda de treinos</div>
+            <div class="hint">Escreva o treino de cada dia (ex: <i>musculação</i>, <i>corrida + muay thai</i>). Deixe vazio ou escreva <i>descanso</i> nos dias livres.</div>
             <div class="agenda-strip" id="agenda-inputs"></div>
         </div>
 
@@ -277,6 +335,7 @@
         <div id="save-status" class="save-status"></div>
 
         <div class="macro-grid" id="macro-grid"></div>
+        <div class="stats-grid" id="stats-grid"></div>
 
         <div id="aviso-macro"></div>
 
@@ -296,6 +355,12 @@
             <div id="cardapio-conteudo"></div>
         </div>
 
+        <div class="bloco">
+            <div class="section-title" style="padding-left:0;">🛒 Lista de compras da semana</div>
+            <div class="hint" style="padding:0 0 10px;">Estimativa para 7 dias seguindo o Cardápio A. Arroz e macarrão estão em peso cozido (cru rende cerca de 2,5×).</div>
+            <ul id="lista-compras" class="lista-compras"></ul>
+        </div>
+
         <div class="surface surface-pad" style="background: repeating-linear-gradient(135deg, var(--card), var(--card) 10px, #F7F5F0 10px, #F7F5F0 11px);">
             <div class="section-title" style="padding-left:0;">📋 Resumo técnico</div>
             <div id="info-usuario-final" class="info-final" style="padding-bottom:14px;"></div>
@@ -306,7 +371,14 @@
             <div id="lista-historico"></div>
         </div>
 
-        <button class="ghost-btn" onclick="novaConsulta()">Nova consulta</button>
+        <div class="acoes no-print">
+            <button class="acao-btn" onclick="window.print()">🖨️ Salvar PDF / Imprimir</button>
+            <button class="acao-btn" onclick="compartilharWhatsApp()">📲 Enviar pelo WhatsApp</button>
+        </div>
+        <a id="cta-consultor" class="cta-consultor no-print" target="_blank" rel="noopener" style="display:none">💬 Falar com o consultor para ajustar meu plano</a>
+        <p class="disclaimer">Este plano é uma estimativa automática e não substitui a avaliação individual de um nutricionista. Gestantes, menores de 18 anos e pessoas com doenças crônicas devem buscar acompanhamento profissional.</p>
+
+        <button class="ghost-btn no-print" onclick="novaConsulta()">Nova consulta</button>
     </div>
 </div>
 
@@ -353,6 +425,14 @@ async function salvarNoSupabase(registro) {
 
 const dias = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
+// Escapa texto digitado pelo usuário antes de inserir em HTML.
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// Formata gramas: 1250 -> "1,3 kg"; 300 -> "300 g"
+const fmtPeso = (g) => g >= 1000 ? `${(g / 1000).toFixed(1).replace('.', ',')} kg` : `${Math.round(g / 10) * 10} g`;
+
+let ultimoPlanoTexto = "";
+
 window.onload = () => {
     const container = document.getElementById('agenda-inputs');
     dias.forEach(dia => {
@@ -361,10 +441,11 @@ window.onload = () => {
         col.className = 'dia-col';
         col.innerHTML = `
             <span class="dia-label">${dia}</span>
-            <textarea id="in_${dia}" class="dia-input" placeholder="treino">${salvo}</textarea>`;
+            <textarea id="in_${dia}" class="dia-input" placeholder="treino">${esc(salvo)}</textarea>`;
         container.appendChild(col);
     });
     if (mem.get('fit_nome')) document.getElementById('nome').value = mem.get('fit_nome');
+    if (mem.get('fit_atividade')) document.getElementById('atividade').value = mem.get('fit_atividade');
     exibirHistorico();
 };
 
@@ -407,9 +488,15 @@ function gerarPlano() {
     const restricao = document.getElementById('restricao').value;
     const prefs = (document.getElementById('preferencias').value || "").toLowerCase();
 
-    if (!peso || !altura || !idade) return alert("Preencha todos os dados.");
+    const atividade = document.getElementById('atividade').value;
+
+    if (!peso || !altura || !idade) return alert("Preencha peso, altura e idade.");
+    if (peso < 20 || peso > 400) return alert("Confira o peso: informe um valor entre 20 e 400 kg.");
+    if (altura < 80 || altura > 260) return alert("Confira a altura: informe em centímetros (ex: 172).");
+    if (idade < 10 || idade > 120) return alert("Confira a idade: informe um valor entre 10 e 120 anos.");
     if (!document.getElementById('consentimento').checked) return alert("Para continuar, marque a autorização de uso dos dados.");
     mem.set('fit_nome', nome);
+    mem.set('fit_atividade', atividade);
 
     let treinosTotais = 0;
     let diasDuplos = 0;
@@ -433,15 +520,30 @@ function gerarPlano() {
     if (diasDuplos >= 2) fa = 1.725;
     if (diasDuplos >= 4) fa = 1.9;
 
+    // Gasto fora do treino (NEAT): quem passa o dia em pé ou faz trabalho
+    // físico gasta mais que quem trabalha sentado, mesmo treinando igual.
+    if (atividade === 'em_pe') fa += 0.1;
+    if (atividade === 'fisico') fa += 0.2;
+    fa = Math.min(fa, 2.0);
+
     // CORREÇÃO 1: fórmula de Mifflin-St Jeor depende do sexo biológico.
     // Antes o cálculo somava sempre "+5" (constante válida só para homens),
     // o que superestimava o gasto calórico — e por consequência todas as
     // quantidades de comida — de clientes do sexo feminino.
     const constanteSexo = genero === 'f' ? -161 : 5;
-    let kcal = ((10 * peso) + (6.25 * altura) - (5 * idade) + constanteSexo) * fa;
+    const tmb = (10 * peso) + (6.25 * altura) - (5 * idade) + constanteSexo;
+    const gastoTotal = tmb * fa;
+    let kcal = gastoTotal;
     if (objetivo === 'emagrecer') kcal -= 450;
     if (objetivo === 'ganhar') kcal += 450;
-    kcal = Math.max(kcal, peso * 20); // piso de segurança (nunca abaixo de ~20kcal/kg)
+    // Piso de segurança: nunca abaixo da taxa metabólica basal nem do mínimo
+    // usual (1200 kcal mulheres / 1500 kcal homens) sem acompanhamento.
+    const pisoKcal = Math.max(peso * 20, tmb, genero === 'f' ? 1200 : 1500);
+    let avisoPiso = "";
+    if (kcal < pisoKcal) {
+        kcal = pisoKcal;
+        avisoPiso = `<div class="aviso-box">⚠️ O déficit calculado ficaria abaixo do mínimo seguro. Ajustamos sua meta para ${Math.round(pisoKcal)} kcal/dia — para déficits maiores, procure acompanhamento profissional.</div>`;
+    }
 
     // CORREÇÃO 3: a meta de proteína estava fixa em 2,2g/kg para qualquer
     // cliente — valor de topo, usado só por atletas avançados em definição.
@@ -461,12 +563,18 @@ function gerarPlano() {
     // gerando quantidades de comida negativas/zeradas no cardápio (ex: "-40g
     // de arroz"). Agora aplicamos um piso mínimo de carboidrato e avisamos
     // o cliente quando isso acontece.
-    let avisoMacro = "";
+    let avisoMacro = avisoPiso;
     const cGminimo = Math.round(peso * 1.2); // piso mínimo de carboidrato (g)
     if (cG < cGminimo) {
         cG = cGminimo;
-        avisoMacro = `<div class="aviso-box">⚠️ O déficit calórico calculado era agressivo demais para manter a meta de proteína com segurança. Ajustamos o carboidrato para um piso mínimo de ${cGminimo}g/dia — consulte um nutricionista para revisar a meta calórica.</div>`;
+        avisoMacro += `<div class="aviso-box">⚠️ O déficit calórico calculado era agressivo demais para manter a meta de proteína com segurança. Ajustamos o carboidrato para um piso mínimo de ${cGminimo}g/dia — consulte um nutricionista para revisar a meta calórica.</div>`;
     }
+
+    // Gordura (0,8 g/kg) agora é exibida, e as calorias mostradas passam a
+    // ser exatamente a soma dos macros (antes, quando o piso de carboidrato
+    // era aplicado, o total de kcal exibido não batia com os gramas).
+    const gG = Math.round(peso * 0.8);
+    kcal = (pG * 4) + (cG * 4) + (gG * 9);
 
     // CORREÇÃO 4: cada refeição principal (almoço e jantar) usava 30% do
     // total diário de proteína/carboidrato — mas como frango/carne/tofu
@@ -530,6 +638,49 @@ function gerarPlano() {
         lancheCustom = "Omelete de 3 ovos com vegetais + 1 fatia de pão integral";
     }
 
+    // ---- Lista de compras (7 dias do Cardápio A) ----
+    const vegano = restricao === 'vegano';
+    const compras = {};
+    const add = (item, qtd, un = 'g') => {
+        if (!compras[item]) compras[item] = { qtd: 0, un };
+        compras[item].qtd += qtd * 7;
+    };
+    // Café da manhã
+    if (vegano) add('Tofu', 100); else add('Ovos', 3, 'un');
+    add(restricao === 'gluten' ? 'Pão sem glúten (fatias)' : 'Pão integral (fatias)', 2, 'un');
+    add('Frutas variadas', 1, 'un');
+    // Almoço — carboidrato
+    if (prefs.includes("batata doce") || prefs.includes("mandioca")) add('Batata doce ou mandioca', batataDoce);
+    else if (prefs.includes("arroz") || prefs.includes("feijão") || prefs.includes("feijao")) { add('Arroz integral (cozido)', Math.round(arroz * 0.7)); add('Feijão (cozido)', 80); }
+    else if (prefs.includes("macarrão") || prefs.includes("macarrao") || prefs.includes("massa")) add('Macarrão integral (cozido)', Math.round(arroz * 0.9));
+    else add('Arroz integral (cozido)', arroz);
+    // Almoço — proteína
+    if (vegano) add('Tofu', tofu);
+    else if (prefs.includes("carne") || prefs.includes("patinho") || prefs.includes("bife")) add('Patinho / carne magra', carneMagra);
+    else add('Peito de frango', frango);
+    // Sobremesa
+    if (prefs.includes("chocolate") || prefs.includes("doce")) add('Chocolate amargo 70%', 20);
+    else add('Frutas variadas', 1, 'un');
+    // Lanche
+    if (prefs.includes("ovo") || prefs.includes("omelete")) {
+        add('Ovos', 3, 'un');
+        add(restricao === 'gluten' ? 'Pão sem glúten (fatias)' : 'Pão integral (fatias)', 1, 'un');
+    } else {
+        add('Banana', 1, 'un');
+        add('Aveia em flocos', 30);
+        add(vegano ? 'Proteína de ervilha (doses)' : (restricao === 'lactose' ? 'Whey zero lactose (doses)' : 'Whey protein (doses)'), 1, 'un');
+    }
+    // Jantar
+    if (prefs.includes("hambúrguer") || prefs.includes("hamburguer")) { if (vegano) add('Tofu', tofu); else add('Patinho / carne magra', carneMagra); }
+    else if (vegano) add('Tofu', tofu);
+    else add('Peito de frango', frango);
+    add('Legumes (brócolis, chuchu etc.)', 200);
+    add('Folhas para salada', 100);
+
+    const listaComprasHTML = Object.entries(compras).map(([item, { qtd, un }]) =>
+        `<li><span>${esc(item)}</span><span>${un === 'un' ? Math.ceil(qtd) + ' un' : fmtPeso(qtd)}</span></li>`
+    ).join('');
+
     let fbk = `💧 <b>Hidratação crítica:</b> consuma no mínimo <b>${Math.round(peso * 45)}ml</b> de água por dia.<br><br>${fbkCustom}`;
     if (diasDuplos > 0) fbk += `⚡ <b>Volume de elite:</b> identificamos ${diasDuplos} dia(s) de carga dupla. Use o carboidrato do almoço como base de energia.<br><br>`;
     if (agendaStr.includes("musculação") || agendaStr.includes("academia")) fbk += `💪 <b>Anabolismo:</b> distribua os <b>${Math.round(pG)}g de proteína</b> em porções iguais ao longo do dia.<br>`;
@@ -570,24 +721,61 @@ function gerarPlano() {
         </div>
     `;
     document.getElementById('cardapio-conteudo').innerHTML = cardapioHTML;
-    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+    document.getElementById('lista-compras').innerHTML = listaComprasHTML;
 
     document.getElementById('saudacao').innerText = `Consultoria: ${nome}`;
+
+    const nomesObjetivo = { emagrecer: 'Emagrecer', manter: 'Manter peso', ganhar: 'Ganhar massa' };
+    const nomesAtividade = { sentado: 'trabalho sentado', em_pe: 'rotina em pé', fisico: 'trabalho físico' };
+    document.getElementById('perfil-info-top').textContent =
+        `${nomesObjetivo[objetivo]} · ${treinosTotais} treino(s) por semana · ${nomesAtividade[atividade]}`;
 
     const kcalPct = Math.min(kcal / 4000, 1);
     const pPct = Math.min(pG / 260, 1);
     const cPct = Math.min(cG / 500, 1);
+    const gPct = Math.min(gG / 150, 1);
     document.getElementById('macro-grid').innerHTML =
         ring(kcalPct, 'var(--accent)', 'Kcal / dia', Math.round(kcal)) +
         ring(pPct, 'var(--primary)', 'Proteína', Math.round(pG) + 'g') +
-        ring(cPct, 'var(--gold)', 'Carbo', Math.round(cG) + 'g');
+        ring(cPct, 'var(--gold)', 'Carbo', Math.round(cG) + 'g') +
+        ring(gPct, '#7A8FB8', 'Gordura', gG + 'g');
+
+    const imc = peso / Math.pow(altura / 100, 2);
+    let imcClasse = 'peso normal';
+    if (imc < 18.5) imcClasse = 'abaixo do peso';
+    else if (imc >= 30) imcClasse = 'obesidade';
+    else if (imc >= 25) imcClasse = 'sobrepeso';
+    const aguaL = (peso * 45 / 1000).toFixed(1).replace('.', ',');
+    document.getElementById('stats-grid').innerHTML = `
+        <div class="stat"><small>IMC</small><b>${imc.toFixed(1).replace('.', ',')}</b><em>${imcClasse}</em></div>
+        <div class="stat"><small>Água por dia</small><b>${aguaL} L</b></div>
+        <div class="stat"><small>Metabolismo basal</small><b>${Math.round(tmb)}</b><em>kcal</em></div>
+        <div class="stat"><small>Gasto diário total</small><b>${Math.round(gastoTotal)}</b><em>kcal</em></div>`;
 
     document.getElementById('info-usuario-final').innerHTML = `
-        • <b>Atleta:</b> ${nome} | ${genero === 'f' ? 'Feminino' : 'Masculino'} | ${peso}kg | ${altura}cm<br>
-        • <b>Restrições:</b> ${restricao.toUpperCase()}<br>
-        • <b>Preferências adaptadas:</b> ${prefs || "Nenhuma informada"}<br>
-        • <b>Rotina:</b> ${agendaResumo || "Não informada"}
+        • <b>Atleta:</b> ${esc(nome)} | ${genero === 'f' ? 'Feminino' : 'Masculino'} | ${peso}kg | ${altura}cm | ${idade} anos<br>
+        • <b>Restrições:</b> ${esc(restricao.toUpperCase())}<br>
+        • <b>Preferências adaptadas:</b> ${esc(prefs) || "Nenhuma informada"}<br>
+        • <b>Rotina:</b> ${esc(agendaResumo) || "Não informada"}
     `;
+
+    // Texto para compartilhar no WhatsApp
+    const opcaoA = [...document.querySelectorAll('#opcaoA .dieta-box')]
+        .map(b => `• ${b.querySelector('b').innerText}: ${b.querySelector('p').innerText}`).join('\n');
+    ultimoPlanoTexto =
+        `*Meu plano FitPlan Elite* — ${nomesObjetivo[objetivo]}\n` +
+        `🔥 ${Math.round(kcal)} kcal/dia | Proteína ${Math.round(pG)}g | Carbo ${Math.round(cG)}g | Gordura ${gG}g\n` +
+        `💧 Água: ${aguaL} L/dia\n\n*Cardápio A*\n${opcaoA}\n\n${location.href.split('#')[0]}`;
+
+    const cfgWpp = ((window.FITPLAN_CONFIG || {}).WHATSAPP_CONSULTOR || '').replace(/\D/g, '');
+    const cta = document.getElementById('cta-consultor');
+    if (cfgWpp) {
+        cta.href = `https://wa.me/${cfgWpp}?text=${encodeURIComponent(`Olá! Sou ${nome}, gerei meu plano no FitPlan Elite (${Math.round(kcal)} kcal/dia, objetivo: ${nomesObjetivo[objetivo]}) e gostaria de ajustar com você.`)}`;
+        cta.style.display = 'block';
+    } else {
+        cta.style.display = 'none';
+    }
 
     const h = JSON.parse(mem.get('fit_hist_vElite') || '[]');
     h.unshift({ d: new Date().toLocaleDateString('pt-BR'), p: peso, k: Math.round(kcal) });
@@ -618,9 +806,20 @@ function exibirHistorico() {
         el.innerHTML = `<div class="hist-empty">Suas últimas consultas aparecerão aqui.</div>`;
         return;
     }
-    el.innerHTML = h.map(i => `
-        <div class="hist-item"><span>${i.d}</span><strong>${i.p}kg · ${i.k} kcal</strong></div>
+    let delta = '';
+    if (h.length > 1) {
+        const dif = h[0].p - h[h.length - 1].p;
+        const sinal = dif > 0 ? '+' : (dif < 0 ? '−' : '');
+        delta = `<div class="hist-delta">${dif === 0 ? 'Peso estável' : `<b>${sinal}${Math.abs(dif).toFixed(1).replace('.', ',')} kg</b>`} desde ${esc(h[h.length - 1].d)}</div>`;
+    }
+    el.innerHTML = delta + h.map(i => `
+        <div class="hist-item"><span>${esc(i.d)}</span><strong>${esc(i.p)}kg · ${esc(i.k)} kcal</strong></div>
     `).join('');
+}
+
+function compartilharWhatsApp() {
+    if (!ultimoPlanoTexto) return;
+    window.open(`https://wa.me/?text=${encodeURIComponent(ultimoPlanoTexto)}`, '_blank', 'noopener');
 }
 </script>
 </body>
