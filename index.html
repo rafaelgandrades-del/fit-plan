@@ -260,6 +260,38 @@
         background: var(--primary); color: #fff; font-weight: 700; text-decoration: none; font-size: 14.5px;
     }
     .disclaimer { font-size: 11px; color: var(--ink-soft); line-height: 1.5; margin: 18px 2px 0; }
+    .entrar-link {
+        display: block; width: 100%; background: none; border: none; font: inherit; font-size: 13px;
+        color: var(--ink-soft); cursor: pointer; padding: 0 2px 14px; text-align: left;
+    }
+    .entrar-link b { color: var(--primary); text-decoration: underline; }
+    .entrar-box { padding: 16px 18px; }
+    .entrar-box[hidden] { display: none; }
+    .entrar-box p { margin: 0 0 10px; font-size: 13.5px; font-weight: 600; }
+    .entrar-linha { display: flex; gap: 8px; }
+    .entrar-linha input {
+        flex: 1; min-width: 0; text-align: left; font-size: 16px; letter-spacing: .08em; font-weight: 600;
+        padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+    }
+    .entrar-linha input:focus { border-color: var(--primary); }
+    .entrar-linha button {
+        padding: 0 18px; border: none; border-radius: 10px; background: var(--primary); color: #fff;
+        font: inherit; font-weight: 700; cursor: pointer;
+    }
+    .codigo-msg { font-size: 12.5px; color: var(--accent-d); margin-top: 8px; min-height: 1em; }
+    .codigo-box {
+        display: flex; align-items: center; gap: 12px; background: #FFF8E8; border: 1px dashed var(--gold);
+        border-radius: 14px; padding: 14px 16px; margin: -6px 0 18px;
+    }
+    .codigo-box[hidden] { display: none; }
+    .codigo-box > div { flex: 1; }
+    .codigo-box small { display: block; font-size: 11px; font-weight: 700; color: #8A6A22; text-transform: uppercase; letter-spacing: .06em; }
+    .codigo-box strong { display: block; font-size: 22px; letter-spacing: .1em; color: var(--ink); margin: 2px 0 4px; font-variant-numeric: tabular-nums; }
+    .codigo-box span { display: block; font-size: 11.5px; color: var(--ink-soft); line-height: 1.45; }
+    .codigo-box button {
+        flex-shrink: 0; padding: 10px 14px; border: none; border-radius: 10px; background: var(--gold); color: #fff;
+        font: inherit; font-weight: 700; font-size: 13px; cursor: pointer;
+    }
     .boas-vindas {
         background: linear-gradient(155deg, var(--primary-d), var(--primary)); color: #EAF6EF;
         border-radius: 18px; padding: 18px; margin-bottom: 18px; box-shadow: var(--shadow);
@@ -320,6 +352,18 @@
 
     <div id="form-dieta">
         <div id="boas-vindas" class="boas-vindas" hidden></div>
+
+        <button type="button" class="entrar-link" onclick="toggleEntrarCodigo()">🔑 Já fez consulta em outro aparelho? <b>Entrar com código</b></button>
+        <div id="entrar-codigo" class="surface entrar-box" hidden>
+            <p>Digite o código que apareceu no seu plano:</p>
+            <div class="entrar-linha">
+                <input id="codigo-input" type="text" inputmode="text" autocomplete="off" autocapitalize="characters"
+                       placeholder="FIT-XXXX-XXXX" maxlength="13" oninput="formatarCodigoDigitado(this)"
+                       onkeydown="if (event.key === 'Enter') entrarComCodigo()">
+                <button type="button" onclick="entrarComCodigo()">Entrar</button>
+            </div>
+            <div id="codigo-msg" class="codigo-msg"></div>
+        </div>
         <div class="surface surface-pad">
             <div class="section-title" style="padding-left:0;">Seus dados</div>
             <div class="input-row"><label>Nome</label><input type="text" id="nome" placeholder="Seu nome"></div>
@@ -398,6 +442,15 @@
         <div id="perfil-info-top" class="perfil-resumo-top"></div>
         <div id="save-status" class="save-status"></div>
 
+        <div id="codigo-box" class="codigo-box" hidden>
+            <div>
+                <small>🔑 Seu código de acesso</small>
+                <strong id="codigo-valor"></strong>
+                <span>Guarde este código: com ele você abre suas consultas em qualquer celular ou computador. Não compartilhe — ele dá acesso aos seus dados.</span>
+            </div>
+            <button type="button" id="codigo-copiar" class="no-print" onclick="copiarCodigo()">Copiar</button>
+        </div>
+
         <div class="macro-grid" id="macro-grid"></div>
         <div class="stats-grid" id="stats-grid"></div>
 
@@ -462,34 +515,131 @@ const mem = {
     set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
 };
 
-async function salvarNoSupabase(registro) {
-    const status = document.getElementById('save-status');
+function supabasePost(caminho, corpo, prefer) {
     const cfg = window.FITPLAN_CONFIG || {};
-    if (!cfg.SUPABASE_URL || cfg.SUPABASE_URL.includes('SEU-PROJETO')) {
+    const headers = {
+        'Content-Type': 'application/json',
+        'apikey': cfg.SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${cfg.SUPABASE_ANON_KEY}`,
+    };
+    if (prefer) headers['Prefer'] = prefer;
+    return fetch(`${cfg.SUPABASE_URL}/rest/v1/${caminho}`, { method: 'POST', headers, body: JSON.stringify(corpo) });
+}
+
+function supabaseConfigurado() {
+    const cfg = window.FITPLAN_CONFIG || {};
+    return cfg.SUPABASE_URL && !cfg.SUPABASE_URL.includes('SEU-PROJETO');
+}
+
+// Código de acesso do cliente: FIT-XXXX-XXXX (sem letras/números ambíguos como O/0, I/1)
+function gerarCodigo() {
+    const alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const bytes = new Uint8Array(8);
+    crypto.getRandomValues(bytes);
+    const s = Array.from(bytes, b => alfabeto[b % alfabeto.length]).join('');
+    return `FIT-${s.slice(0, 4)}-${s.slice(4)}`;
+}
+
+function codigoDoCliente() {
+    let c = mem.get('fit_codigo');
+    if (!c) { c = gerarCodigo(); mem.set('fit_codigo', c); }
+    return c;
+}
+
+// Salva a consulta. Retorna true se o código de acesso foi gravado junto.
+async function salvarNoSupabase(registro, extras) {
+    const status = document.getElementById('save-status');
+    if (!supabaseConfigurado()) {
         status.className = 'save-status erro';
         status.textContent = 'Supabase não configurado (edite config.js).';
-        return;
+        return false;
     }
     status.className = 'save-status';
     status.textContent = 'Salvando sua consulta…';
     try {
-        const resp = await fetch(`${cfg.SUPABASE_URL}/rest/v1/consultas`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'apikey': cfg.SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${cfg.SUPABASE_ANON_KEY}`,
-                'Prefer': 'return=minimal',
-            },
-            body: JSON.stringify(registro),
-        });
+        let resp = await supabasePost('consultas', { ...registro, ...extras }, 'return=minimal');
+        let comCodigo = resp.ok;
+        if (!resp.ok) {
+            // Banco ainda sem as colunas do código (supabase-codigo.sql não rodado):
+            // salva no formato antigo para não perder a consulta.
+            const txt = await resp.text();
+            if (resp.status === 400 && /codigo|dados|PGRST204/.test(txt)) {
+                resp = await supabasePost('consultas', registro, 'return=minimal');
+            } else {
+                throw new Error(`${resp.status} ${txt}`);
+            }
+        }
         if (!resp.ok) throw new Error(`${resp.status} ${await resp.text()}`);
         status.className = 'save-status ok';
         status.textContent = '✓ Consulta salva com sucesso.';
+        return comCodigo;
     } catch (e) {
         console.error('Erro ao salvar no Supabase:', e);
         status.className = 'save-status erro';
         status.textContent = '⚠️ Não foi possível salvar a consulta. Verifique sua conexão.';
+        return false;
+    }
+}
+
+function mostrarCodigo(codigo) {
+    const box = document.getElementById('codigo-box');
+    if (!codigo) { box.hidden = true; return; }
+    document.getElementById('codigo-valor').textContent = codigo;
+    box.hidden = false;
+}
+
+async function copiarCodigo() {
+    const c = document.getElementById('codigo-valor').textContent;
+    const btn = document.getElementById('codigo-copiar');
+    try { await navigator.clipboard.writeText(c); btn.textContent = '✓ Copiado'; }
+    catch (e) { btn.textContent = c; }
+    setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+}
+
+// ---- Entrar com código (outro aparelho) ----
+function toggleEntrarCodigo() {
+    const f = document.getElementById('entrar-codigo');
+    f.hidden = !f.hidden;
+    if (!f.hidden) document.getElementById('codigo-input').focus();
+}
+
+function formatarCodigoDigitado(el) {
+    let s = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (s.startsWith('FIT')) s = s.slice(3);
+    s = s.slice(0, 8);
+    el.value = s.length > 4 ? `FIT-${s.slice(0, 4)}-${s.slice(4)}` : (s ? `FIT-${s}` : '');
+}
+
+async function entrarComCodigo() {
+    const codigo = document.getElementById('codigo-input').value.trim().toUpperCase();
+    const msg = document.getElementById('codigo-msg');
+    if (!/^FIT-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(codigo)) {
+        msg.textContent = 'Digite o código completo, no formato FIT-XXXX-XXXX.';
+        return;
+    }
+    if (!supabaseConfigurado()) { msg.textContent = 'Serviço indisponível no momento.'; return; }
+    msg.textContent = 'Buscando suas consultas…';
+    try {
+        const resp = await supabasePost('rpc/buscar_consultas', { p_codigo: codigo });
+        if (resp.status === 404) { msg.textContent = 'Este recurso ainda está sendo ativado. Tente mais tarde.'; return; }
+        if (!resp.ok) throw new Error(`${resp.status} ${await resp.text()}`);
+        const linhas = await resp.json();
+        if (!linhas.length) { msg.textContent = 'Nenhuma consulta encontrada com esse código. Confira e tente de novo.'; return; }
+        const hist = linhas.map(l => ({
+            d: new Date(l.criado_em).toLocaleDateString('pt-BR'),
+            p: Number(l.peso), k: l.kcal, dados: l.dados,
+        }));
+        mem.set('fit_hist_vElite', JSON.stringify(hist));
+        mem.set('fit_codigo', codigo);
+        mem.set('fit_codigo_ativo', '1');
+        if (hist[0].dados.nome) mem.set('fit_nome', hist[0].dados.nome);
+        msg.textContent = '';
+        document.getElementById('entrar-codigo').hidden = true;
+        exibirHistorico();
+        abrirConsulta(0);
+    } catch (e) {
+        console.error('Erro ao buscar consultas:', e);
+        msg.textContent = 'Não foi possível buscar agora. Verifique sua conexão.';
     }
 }
 
@@ -749,7 +899,7 @@ function abrirConsulta(indice) {
 
 function esquecerDados() {
     if (!confirm('Apagar deste aparelho seu nome, rotina e histórico de consultas?\n\n(Os dados enviados ao consultor não são apagados por aqui — para isso, fale com ele.)')) return;
-    ['fit_nome', 'fit_atividade', 'fit_hist_vElite'].concat(dias.map(d => `treino_${d}`)).forEach(k => {
+    ['fit_nome', 'fit_atividade', 'fit_hist_vElite', 'fit_codigo', 'fit_codigo_ativo'].concat(dias.map(d => `treino_${d}`)).forEach(k => {
         try { localStorage.removeItem(k); } catch (e) {}
     });
     location.reload();
@@ -1115,15 +1265,24 @@ function gerarPlano(opts = {}) {
     const treinoHTML = montarTreinoSemana(agendaDias, objetivo);
     document.getElementById('treino-semana').innerHTML = treinoHTML;
     document.getElementById('treino-bloco').style.display = treinoHTML ? 'block' : 'none';
-    if (!reabrir) salvarNoSupabase({
-        nome, genero, peso, altura, idade, objetivo, restricao,
-        preferencias: prefs,
-        agenda,
-        kcal: Math.round(kcal),
-        proteina_g: Math.round(pG),
-        carbo_g: Math.round(cG),
-        consentimento: true,
-    });
+    document.getElementById('entrar-codigo').hidden = true;
+    if (reabrir) {
+        mostrarCodigo(mem.get('fit_codigo_ativo') ? mem.get('fit_codigo') : null);
+    } else {
+        mostrarCodigo(null);
+        const codigo = codigoDoCliente();
+        salvarNoSupabase({
+            nome, genero, peso, altura, idade, objetivo, restricao,
+            preferencias: prefs,
+            agenda,
+            kcal: Math.round(kcal),
+            proteina_g: Math.round(pG),
+            carbo_g: Math.round(cG),
+            consentimento: true,
+        }, { codigo, dados: coletarFormulario() }).then(comCodigo => {
+            if (comCodigo) { mem.set('fit_codigo_ativo', '1'); mostrarCodigo(codigo); }
+        });
+    }
 
     document.getElementById('form-dieta').style.display = 'none';
     document.getElementById('resultado').style.display = 'block';

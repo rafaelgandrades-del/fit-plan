@@ -50,7 +50,7 @@
 
     <div id="painel" style="display:none">
         <div class="toolbar">
-            <input id="busca" placeholder="Buscar por nome…" oninput="render()">
+            <input id="busca" placeholder="Buscar por nome ou código…" oninput="render()">
             <button class="ghost" onclick="carregar()">Atualizar</button>
             <button class="ghost" onclick="exportarCSV()">Exportar CSV</button>
             <button class="ghost" onclick="sair()">Sair</button>
@@ -59,7 +59,7 @@
         <div class="card table-wrap">
             <table>
                 <thead><tr>
-                    <th>Data</th><th>Nome</th><th>Sexo</th><th>Peso</th><th>Altura</th><th>Idade</th>
+                    <th>Data</th><th>Nome</th><th>Código</th><th>Sexo</th><th>Peso</th><th>Altura</th><th>Idade</th>
                     <th>Objetivo</th><th>Restrição</th><th>Kcal</th><th>Prot.</th><th>Carbo</th><th>Detalhes</th><th></th>
                 </tr></thead>
                 <tbody id="linhas"></tbody>
@@ -107,7 +107,7 @@ async function carregar() {
 
 function render() {
     const q = document.getElementById('busca').value.toLowerCase();
-    const lista = dados.filter(r => r.nome.toLowerCase().includes(q));
+    const lista = dados.filter(r => r.nome.toLowerCase().includes(q) || (r.codigo || '').toLowerCase().includes(q));
     const clientes = new Set(dados.map(r => r.nome.toLowerCase())).size;
     document.getElementById('resumo').textContent =
         dados.length ? `${dados.length} consulta(s) de ${clientes} cliente(s).`
@@ -117,6 +117,7 @@ function render() {
         return `<tr>
             <td class="num">${new Date(r.criado_em).toLocaleString('pt-BR')}</td>
             <td><b>${esc(r.nome)}</b></td>
+            <td class="num">${r.codigo ? `<code>${esc(r.codigo)}</code>` : '—'}</td>
             <td>${r.genero === 'f' ? 'F' : 'M'}</td>
             <td class="num">${esc(r.peso)} kg</td>
             <td class="num">${esc(r.altura)} cm</td>
@@ -127,7 +128,8 @@ function render() {
             <td class="num">${esc(r.proteina_g)} g</td>
             <td class="num">${esc(r.carbo_g)} g</td>
             <td><details><summary>ver</summary>
-                <div class="muted"><b>Gosta de:</b> ${esc(r.preferencias) || '—'}<br><b>Treinos:</b><br>${agenda || '—'}</div>
+                <div class="muted"><b>Gosta de:</b> ${esc(r.preferencias) || '—'}<br>
+                ${r.dados && r.dados.atividade ? `<b>Rotina diária:</b> ${esc({ sentado: 'fica mais sentado', em_pe: 'anda / fica em pé', fisico: 'trabalho físico' }[r.dados.atividade] || r.dados.atividade)}<br>` : ''}<b>Treinos:</b><br>${agenda || '—'}</div>
             </details></td>
             <td><button class="danger" onclick="apagar(${Number(r.id)})">Apagar</button></td>
         </tr>`;
@@ -142,7 +144,7 @@ async function apagar(id) {
 }
 
 function exportarCSV() {
-    const cols = ['criado_em','nome','genero','peso','altura','idade','objetivo','restricao','preferencias','kcal','proteina_g','carbo_g','agenda'];
+    const cols = ['criado_em','nome','codigo','genero','peso','altura','idade','objetivo','restricao','preferencias','kcal','proteina_g','carbo_g','agenda'];
     const cel = (v) => '"' + String(typeof v === 'object' && v ? JSON.stringify(v) : (v ?? '')).replace(/"/g, '""') + '"';
     const csv = [cols.join(';'), ...dados.map(r => cols.map(c => cel(r[c])).join(';'))].join('\r\n');
     const a = document.createElement('a');

@@ -33,6 +33,9 @@ Depois de 1–2 minutos:
 - Site dos clientes: `https://rafaelgandrades-del.github.io/fit-plan/`
 - Seu painel: `https://rafaelgandrades-del.github.io/fit-plan/admin.html`
 
+## 6. Código de acesso do cliente
+Rode `supabase-codigo.sql` no SQL Editor (uma vez). A partir daí, cada cliente recebe um código `FIT-XXXX-XXXX` no plano e pode abrir suas consultas em qualquer aparelho pelo link **"Entrar com código"**. O código também aparece no painel admin, caso o cliente perca.
+
 ## Segurança, em resumo
 - Visitantes do site **só conseguem inserir** consultas — não leem nem apagam nada.
 - Só o seu e-mail logado no painel consegue **ver e apagar**.
