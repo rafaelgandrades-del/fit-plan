@@ -260,6 +260,26 @@
         background: var(--primary); color: #fff; font-weight: 700; text-decoration: none; font-size: 14.5px;
     }
     .disclaimer { font-size: 11px; color: var(--ink-soft); line-height: 1.5; margin: 18px 2px 0; }
+    .boas-vindas {
+        background: linear-gradient(155deg, var(--primary-d), var(--primary)); color: #EAF6EF;
+        border-radius: 18px; padding: 18px; margin-bottom: 18px; box-shadow: var(--shadow);
+    }
+    .boas-vindas[hidden] { display: none; }
+    .boas-vindas h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: .02em; margin: 0 0 4px; color: #fff; font-weight: 400; }
+    .boas-vindas p { margin: 0 0 14px; font-size: 13.5px; line-height: 1.5; }
+    .boas-vindas .bv-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .boas-vindas button {
+        padding: 12px 8px; border-radius: 12px; font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; border: none;
+    }
+    .bv-ver { background: var(--accent); color: #fff; }
+    .bv-nova { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.3) !important; }
+    button.hist-item { width: 100%; border: none; font: inherit; cursor: pointer; text-align: left; }
+    button.hist-item:hover { outline: 1px solid var(--primary); }
+    .hist-abrir { font-size: 12px; color: var(--accent-d); font-weight: 700; margin-left: 8px; }
+    .link-btn {
+        display: block; margin: 10px auto 0; background: none; border: none; font: inherit; font-size: 12px;
+        color: var(--ink-soft); text-decoration: underline; cursor: pointer;
+    }
     .hist-delta { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 8px 2px; }
     @media print {
         body { background: #fff; padding: 0; }
@@ -299,6 +319,7 @@
     </header>
 
     <div id="form-dieta">
+        <div id="boas-vindas" class="boas-vindas" hidden></div>
         <div class="surface surface-pad">
             <div class="section-title" style="padding-left:0;">Seus dados</div>
             <div class="input-row"><label>Nome</label><input type="text" id="nome" placeholder="Seu nome"></div>
@@ -315,9 +336,9 @@
             <div class="input-row">
                 <label>Rotina diária</label>
                 <select id="atividade">
-                    <option value="sentado">Trabalho sentado</option>
-                    <option value="em_pe">Fico muito em pé / ando bastante</option>
-                    <option value="fisico">Trabalho braçal / físico</option>
+                    <option value="sentado">Fico mais sentado</option>
+                    <option value="em_pe">Ando / fico em pé</option>
+                    <option value="fisico">Trabalho físico</option>
                 </select>
             </div>
         </div>
@@ -417,6 +438,7 @@
         <div id="historico-secao">
             <div class="section-title">🕒 Histórico de evolução</div>
             <div id="lista-historico"></div>
+            <button type="button" class="link-btn no-print" onclick="esquecerDados()">Apagar meus dados deste aparelho</button>
         </div>
 
         <div class="acoes no-print">
@@ -664,8 +686,74 @@ window.onload = () => {
     });
     if (mem.get('fit_nome')) document.getElementById('nome').value = mem.get('fit_nome');
     if (mem.get('fit_atividade')) document.getElementById('atividade').value = mem.get('fit_atividade');
+
+    // Cliente voltando: preenche o formulário e oferece reabrir a última consulta
+    const hist = lerHistorico();
+    const ultima = hist.find(c => c.dados);
+    if (ultima) {
+        preencherFormulario(ultima.dados);
+        const bv = document.getElementById('boas-vindas');
+        const primeiroNome = (ultima.dados.nome || '').split(' ')[0];
+        bv.innerHTML = `
+            <h3>Olá${primeiroNome ? ', ' + esc(primeiroNome) : ''}! 👋</h3>
+            <p>Sua última consulta foi em <b>${esc(ultima.d)}</b> (${esc(ultima.p)} kg · ${esc(ultima.k)} kcal/dia). Quer ver seu plano de novo ou atualizar seus dados?</p>
+            <div class="bv-acoes">
+                <button type="button" class="bv-ver" onclick="abrirConsulta(0)">Ver meu plano</button>
+                <button type="button" class="bv-nova" onclick="document.getElementById('boas-vindas').hidden = true; document.getElementById('peso').focus()">Atualizar dados</button>
+            </div>`;
+        bv.hidden = false;
+    }
     exibirHistorico();
 };
+
+// ---------------- Consultas salvas neste aparelho ----------------
+function lerHistorico() {
+    try { return JSON.parse(mem.get('fit_hist_vElite') || '[]'); } catch (e) { return []; }
+}
+
+function coletarFormulario() {
+    return {
+        nome: document.getElementById('nome').value,
+        genero: document.getElementById('genero').value,
+        peso: document.getElementById('peso').value,
+        altura: document.getElementById('altura').value,
+        idade: document.getElementById('idade').value,
+        atividade: document.getElementById('atividade').value,
+        objetivo: document.getElementById('objetivo').value,
+        restricao: document.getElementById('restricao').value,
+        preferencias: document.getElementById('preferencias').value,
+        agenda: lerAgenda(),
+    };
+}
+
+function preencherFormulario(d) {
+    ['nome', 'genero', 'peso', 'altura', 'idade', 'atividade', 'objetivo', 'restricao', 'preferencias'].forEach(k => {
+        if (d[k] !== undefined) document.getElementById(k).value = d[k];
+    });
+    (d.agenda || []).forEach(a => {
+        if (!document.getElementById(`tipo_${a.dia}`) || !tiposTreino[a.tipo]) return;
+        document.getElementById(`tipo_${a.dia}`).value = a.tipo;
+        document.getElementById(`det_${a.dia}`).value = a.detalhe || '';
+        atualizarLinhaDia(a.dia);
+    });
+}
+
+// Reabre uma consulta salva sem enviar de novo ao consultor nem duplicar o histórico
+function abrirConsulta(indice) {
+    const c = lerHistorico().filter(x => x.dados)[indice];
+    if (!c) return;
+    preencherFormulario(c.dados);
+    document.getElementById('consentimento').checked = true;
+    gerarPlano({ reabrir: true, data: c.d });
+}
+
+function esquecerDados() {
+    if (!confirm('Apagar deste aparelho seu nome, rotina e histórico de consultas?\n\n(Os dados enviados ao consultor não são apagados por aqui — para isso, fale com ele.)')) return;
+    ['fit_nome', 'fit_atividade', 'fit_hist_vElite'].concat(dias.map(d => `treino_${d}`)).forEach(k => {
+        try { localStorage.removeItem(k); } catch (e) {}
+    });
+    location.reload();
+}
 
 function switchTab(tabId, btn) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -696,7 +784,8 @@ function ring(pct, colorVar, label, value) {
     </div>`;
 }
 
-function gerarPlano() {
+function gerarPlano(opts = {}) {
+    const reabrir = !!opts.reabrir;
     const nome = document.getElementById('nome').value || "Atleta";
     const genero = document.getElementById('genero').value; // 'm' ou 'f'
     const peso = parseFloat(document.getElementById('peso').value);
@@ -1010,9 +1099,15 @@ function gerarPlano() {
         cta.style.display = 'none';
     }
 
-    const h = JSON.parse(mem.get('fit_hist_vElite') || '[]');
-    h.unshift({ d: new Date().toLocaleDateString('pt-BR'), p: peso, k: Math.round(kcal) });
-    mem.set('fit_hist_vElite', JSON.stringify(h.slice(0, 5)));
+    if (!reabrir) {
+        const h = lerHistorico();
+        h.unshift({ d: new Date().toLocaleDateString('pt-BR'), p: peso, k: Math.round(kcal), dados: coletarFormulario() });
+        mem.set('fit_hist_vElite', JSON.stringify(h.slice(0, 10)));
+    }
+    const dataConsulta = reabrir ? opts.data : new Date().toLocaleDateString('pt-BR');
+    document.getElementById('perfil-info-top').textContent += ` · consulta de ${dataConsulta}`;
+    document.getElementById('save-status').textContent = '';
+    document.getElementById('boas-vindas').hidden = true;
 
     const agenda = {};
     agendaDias.forEach(d => { agenda[d.dia] = textoDia(d); });
@@ -1020,7 +1115,7 @@ function gerarPlano() {
     const treinoHTML = montarTreinoSemana(agendaDias, objetivo);
     document.getElementById('treino-semana').innerHTML = treinoHTML;
     document.getElementById('treino-bloco').style.display = treinoHTML ? 'block' : 'none';
-    salvarNoSupabase({
+    if (!reabrir) salvarNoSupabase({
         nome, genero, peso, altura, idade, objetivo, restricao,
         preferencias: prefs,
         agenda,
@@ -1037,7 +1132,7 @@ function gerarPlano() {
 }
 
 function exibirHistorico() {
-    const h = JSON.parse(mem.get('fit_hist_vElite') || '[]');
+    const h = lerHistorico();
     const el = document.getElementById('lista-historico');
     if (!h.length) {
         el.innerHTML = `<div class="hist-empty">Suas últimas consultas aparecerão aqui.</div>`;
@@ -1049,9 +1144,11 @@ function exibirHistorico() {
         const sinal = dif > 0 ? '+' : (dif < 0 ? '−' : '');
         delta = `<div class="hist-delta">${dif === 0 ? 'Peso estável' : `<b>${sinal}${Math.abs(dif).toFixed(1).replace('.', ',')} kg</b>`} desde ${esc(h[h.length - 1].d)}</div>`;
     }
-    el.innerHTML = delta + h.map(i => `
-        <div class="hist-item"><span>${esc(i.d)}</span><strong>${esc(i.p)}kg · ${esc(i.k)} kcal</strong></div>
-    `).join('');
+    let idx = 0;
+    el.innerHTML = delta + h.map(i => {
+        if (!i.dados) return `<div class="hist-item"><span>${esc(i.d)}</span><strong>${esc(i.p)}kg · ${esc(i.k)} kcal</strong></div>`;
+        return `<button type="button" class="hist-item" onclick="abrirConsulta(${idx++})"><span>${esc(i.d)}</span><strong>${esc(i.p)}kg · ${esc(i.k)} kcal<span class="hist-abrir">Abrir ›</span></strong></button>`;
+    }).join('');
 }
 
 function compartilharWhatsApp() {
