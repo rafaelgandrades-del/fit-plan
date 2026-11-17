@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meu Plano — Desinchar 21</title>
+<title>Meu Plano — Mapa do Inchaço</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0B6E52">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -55,11 +55,22 @@ input.txt,select{width:100%;padding:14px;border-radius:12px;border:2px solid var
 .tabs button.on{color:var(--primary)}
 .view{display:none}.view.on{display:block}
 .disc{font-size:12px;color:var(--ink-soft);text-align:center;line-height:1.5;margin-top:20px}
+.drow{display:grid;grid-template-columns:70px 1fr 1fr;gap:8px;align-items:center;margin-top:8px}
+.drow input{margin:0;padding:12px}
+#cola{display:none}
+@media print{
+  body{background:#fff}
+  .wrap,.tabs{display:none!important}
+  #cola{display:block;font-family:'Work Sans',sans-serif;color:#000;padding:10mm}
+  #cola h1{font-size:34px;margin:0 0 4px}
+  #cola .cg{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:8mm}
+  #cola ul{font-size:15px;line-height:1.7;padding-left:20px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">DESINCHAR<span>21</span></div>
+  <div class="brand">MAPA DO <span>INCHAÇO</span></div>
 
   <!-- ACESSO -->
   <section id="gate" class="view">
@@ -116,23 +127,41 @@ input.txt,select{width:100%;padding:14px;border-radius:12px;border:2px solid var
       <div><b style="color:var(--primary)">✅ Priorize</b><ul id="gYes"></ul></div>
       <div><b style="color:var(--accent)">⛔ Evite</b><ul id="gNo"></ul></div>
     </div>
-    <div class="card"><h2>As 3 fases</h2>
+    <div class="card"><h2>Método 3D: as 3 fases</h2>
       <p><b>Dias 1–7 · Desinchar:</b> refeições leves, mais água e chás, nada de industrializados. É quando você mais sente a diferença.</p>
-      <p><b>Dias 8–14 · Equilibrar:</b> o intestino se regula e a fome fica mais estável. Voltam alguns alimentos.</p>
-      <p style="margin-bottom:0"><b>Dias 15–21 · Manter:</b> você aprende a montar o prato sozinha para não voltar a inchar.</p>
+      <p><b>Dias 8–14 · Destravar:</b> o intestino se regula e a fome fica mais estável. Voltam alguns alimentos.</p>
+      <p style="margin-bottom:0"><b>Dias 15–21 · Definir:</b> você aprende a montar o prato sozinha para não voltar a inchar.</p>
+    </div>
+    <div class="card">
+      <h2>🧲 Cola da Geladeira</h2>
+      <p class="soft" style="margin-top:0">Uma folha com o essencial do seu tipo para imprimir e prender na geladeira.</p>
+      <button class="btn sec" onclick="window.print()">Imprimir minha Cola</button>
     </div>
   </section>
+
+  <!-- DIÁRIO -->
+  <section id="v-diario" class="view">
+    <h1>Diário do Inchaço</h1>
+    <p class="soft" style="margin-top:0">Meça a cintura na altura do umbigo, <b>sempre à noite</b> e com a mesma fita. Dê também uma nota para o inchaço (0 = nada, 10 = muito).</p>
+    <div class="drow" style="padding:0 16px;font-size:12px;font-weight:700;color:var(--ink-soft)"><span></span><span>CINTURA (CM)</span><span>INCHAÇO (0–10)</span></div>
+    <div id="diario"></div>
+    <div class="card" id="diarioRes" style="display:none"></div>
+  </section>
+
+  <!-- COLA DA GELADEIRA (só aparece na impressão) -->
+  <div id="cola"></div>
 
   <!-- BÔNUS -->
   <section id="v-bonus" class="view">
     <h1>Bônus</h1>
     <div class="card"><h2>🍵 15 chás e sucos para desinchar</h2><div id="bCha"></div></div>
-    <div class="card"><h2>🍽️ Comendo fora sem estragar tudo</h2><div id="bFora"></div></div>
+    <div class="card"><h2>🆘 Guia SOS: festa, restaurante e fim de semana</h2><div id="bFora"></div></div>
     <div class="card"><h2>🍫 Doces sem açúcar para a TPM</h2><div id="bDoce"></div></div>
 
     <!-- ORDER BUMP: 30 MARMITAS -->
     <div class="card" id="mxLocked">
       <span class="pill">EXTRA</span>
+      <img src="img/marmitas.webp" alt="Marmitas prontas organizadas por dia da semana" loading="lazy" width="1254" height="1254" style="width:100%;height:auto;border-radius:14px;margin-top:12px;display:block">
       <h2 style="margin-top:10px">🥡 30 Marmitas Fit para a Semana Toda</h2>
       <p class="soft">Receitas para cozinhar no domingo, congelar e ter almoço e jantar prontos a semana inteira.</p>
       <input class="txt" id="mxCode" placeholder="Código das marmitas" autocomplete="off">
@@ -142,6 +171,7 @@ input.txt,select{width:100%;padding:14px;border-radius:12px;border:2px solid var
     </div>
     <div id="mxOpen" style="display:none">
       <div class="card">
+        <img src="img/marmitas.webp" alt="" loading="lazy" width="1254" height="1254" style="width:100%;height:auto;border-radius:14px;margin-bottom:12px;display:block">
         <h2>🥡 30 Marmitas Fit</h2>
         <div class="chips" id="mxFilter"></div>
         <div id="mxList"></div>
@@ -149,6 +179,7 @@ input.txt,select{width:100%;padding:14px;border-radius:12px;border:2px solid var
       <div class="card"><h2>❄️ Como congelar sem perder o sabor</h2><div id="mxFreeze"></div></div>
       <div class="card"><h2>⏱️ Domingo de preparo em 2 horas</h2><div id="mxSunday"></div></div>
     </div>
+    <div id="extraBumps"></div>
     <p class="disc">Conteúdo educativo, que não substitui consulta com médico ou nutricionista. Gestantes, lactantes, pessoas com doença renal, hipertensão, diabetes ou em uso de medicação devem consultar um profissional antes de mudar a alimentação.</p>
   </section>
 </div>
@@ -157,6 +188,7 @@ input.txt,select{width:100%;padding:14px;border-radius:12px;border:2px solid var
   <button data-v="v-hoje" class="on"><b>📅</b>Hoje</button>
   <button data-v="v-compras"><b>🛒</b>Compras</button>
   <button data-v="v-guia"><b>📖</b>Guia</button>
+  <button data-v="v-diario"><b>📏</b>Diário</button>
   <button data-v="v-bonus"><b>🎁</b>Bônus</button>
 </div></nav>
 
@@ -170,6 +202,8 @@ const CONFIG = {
   BUMP_CODE: 'MARMITA30',
   // Link de compra avulsa das marmitas (opcional). Deixe '' para esconder o botão.
   BUMP_URL: '',
+  // Order bumps extras: um código para cada, enviado só para quem comprou aquele bump.
+  BUMP_CODES: { reset: 'RESET72', leve: 'LEVE10' },
 };
 
 /* ===== PERFIS ===== */
@@ -234,7 +268,7 @@ const OFFSET = {h:0,i:2,r:4,g:1,c:3};
 const SWAPS = {
   lactose:[[/Iogurte natural/g,'Iogurte sem lactose'],[/Omelete de queijo branco com orégano/g,'Omelete de ervas com tomate']],
   gluten:[[/1 fatia de pão integral/g,'1 tapioca pequena'],[/Pão integral com/g,'Tapioca com'],[/aveia/g,'flocos de quinoa']],
-  veg:[[/Frango grelhado ao limão|Tilápia grelhada|Peixe assado|Sobrecoxa assada com ervas|Carne moída magra/g,'Tofu grelhado'],
+  veg:[[/Frango grelhado ao limão|Frango grelhado|Tilápia grelhada|Peixe assado|Sobrecoxa assada com ervas|Carne moída magra/g,'Tofu grelhado'],
        [/Frango desfiado|Peixe/g,'Tofu'],[/frango desfiado/g,'tofu em cubos'],[/com frango/g,'com tofu'],[/carne magra em cubos/g,'tofu em cubos'],[/frango, /g,'tofu, ']],
 };
 const ING_SWAPS = {
@@ -307,6 +341,69 @@ const MX_SUNDAY = [
   '1:45 — Monte as marmitas, espere esfriar, etiquete e guarde: 3 na geladeira e o resto no freezer.',
 ];
 
+/* ===== ORDER BUMPS EXTRAS ===== */
+const RESET = {
+  regras: [
+    'Beba de 2 a 2,5 litros de água por dia, aos poucos.',
+    'Nada de tempero pronto, embutidos, frituras, refrigerante ou álcool nesses 3 dias.',
+    'Coma nos horários: nada de ficar mais de 4 horas sem comer.',
+    'Caminhe 20 minutos por dia, de preferência depois do almoço ou do jantar.',
+    'Durma 7 horas ou mais: sono curto também incha.',
+    'No 4º dia, volte ao seu plano normal. Isto não é detox nem jejum: é comida de verdade, leve.',
+  ],
+  dias: [
+    [['Café','Ovo mexido, mamão e chá de gengibre'],['Lanche','Melancia e água de coco'],['Almoço','Frango grelhado, arroz, abobrinha e cenoura cozidas'],['Lanche','Iogurte natural com chia'],['Jantar','Sopa de abóbora com gengibre e frango desfiado']],
+    [['Café','Tapioca com ovo e chá de hibisco'],['Lanche','1 pera'],['Almoço','Peixe assado, batata-doce e salada de pepino'],['Lanche','Banana com canela'],['Jantar','Omelete de legumes com folhas']],
+    [['Café','Iogurte natural com aveia e morango'],['Lanche','1 kiwi'],['Almoço','Frango desfiado, purê de abóbora e vagem'],['Lanche','Castanhas e chá de camomila'],['Jantar','Caldo de legumes com frango']],
+  ],
+};
+const LEVE = {
+  aviso: 'Movimentos leves, para fazer em casa sem equipamento. Pare se sentir dor. Grávidas, pós-parto recente, hérnia ou lesão na coluna: converse com seu médico antes.',
+  dias: [
+    ['Respiração com a barriga: 2 min','Gato-vaca (de quatro apoios): 1 min','Joelhos ao peito, deitada: 1 min','Rotação do tronco, deitada: 2 min','Caminhada no lugar: 3 min','Postura da criança: 1 min'],
+    ['Respiração com a barriga: 2 min','Ponte de glúteo: 1 min','Torção sentada (cada lado): 2 min','Elevação de joelhos alternada: 2 min','Alongamento borboleta: 1 min','Respiração final: 2 min'],
+    ['Caminhada no lugar: 3 min','Gato-vaca: 1 min','Joelhos ao peito, deitada: 1 min','Ponte de glúteo: 2 min','Rotação do tronco, deitada: 2 min','Postura da criança: 1 min'],
+    ['Respiração com a barriga: 2 min','Elevação de joelhos alternada: 2 min','Torção sentada (cada lado): 2 min','Gato-vaca: 1 min','Alongamento lateral em pé: 2 min','Postura da criança: 1 min'],
+    ['Caminhada no lugar: 4 min','Ponte de glúteo: 2 min','Joelhos ao peito, deitada: 1 min','Rotação do tronco, deitada: 2 min','Respiração final: 1 min'],
+    ['Respiração com a barriga: 2 min','Gato-vaca: 2 min','Alongamento borboleta: 2 min','Torção sentada (cada lado): 2 min','Postura da criança: 2 min'],
+    ['Dia livre ativo: caminhada leve de 20 minutos ao ar livre, depois 2 min de respiração com a barriga'],
+  ],
+  como: [
+    ['Respiração com a barriga','Mão na barriga, puxe o ar pelo nariz enchendo a barriga e solte devagar pela boca.'],
+    ['Gato-vaca','De quatro apoios, arredonde as costas olhando para o umbigo, depois afunde as costas olhando para frente.'],
+    ['Joelhos ao peito','Deitada, abrace os dois joelhos e balance de leve de um lado para o outro.'],
+    ['Rotação do tronco','Deitada com os joelhos dobrados, deixe as pernas caírem devagar para um lado e depois para o outro.'],
+    ['Ponte de glúteo','Deitada com os pés no chão, suba o quadril, segure 2 segundos e desça.'],
+    ['Torção sentada','Sentada, gire o tronco para um lado com a mão no joelho oposto. Repita do outro lado.'],
+    ['Postura da criança','Ajoelhada, sente nos calcanhares e leve o tronco à frente, braços estendidos.'],
+  ],
+};
+const BUMPS = [
+  { id:'reset', nome:'🔁 Reset 72h pós-exagero', desc:'Cardápio de 3 dias para desinchar depois de festa, viagem ou fim de semana.',
+    corpo: () => `<h3 style="margin:4px 0 6px">Regras dos 3 dias</h3><ol style="margin:0;padding-left:20px;line-height:1.6">${RESET.regras.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>` +
+      RESET.dias.map((d,i)=>`<h3 style="margin:16px 0 4px">Dia ${i+1}</h3>`+d.map(([h,t])=>`<div class="meal"><div class="h">${h}</div><div>${esc(applySwaps(t))}</div></div>`).join('')).join('') },
+  { id:'leve', nome:'🧘‍♀️ Barriga Leve em 10 minutos', desc:'7 dias de movimentos leves em casa para ajudar a soltar os gases e o intestino.',
+    corpo: () => `<p class="soft" style="margin:0 0 10px;font-size:13px">${esc(LEVE.aviso)}</p>` +
+      LEVE.dias.map((d,i)=>`<h3 style="margin:14px 0 4px">Dia ${i+1}</h3><ul style="margin:0;padding-left:20px;line-height:1.6">${d.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`).join('') +
+      `<h3 style="margin:18px 0 4px">Como fazer cada movimento</h3>` + LEVE.como.map(([n,t])=>`<p style="margin:6px 0"><b>${esc(n)}:</b> ${esc(t)}</p>`).join('') },
+];
+function renderBumps(){
+  document.getElementById('extraBumps').innerHTML = BUMPS.map(b=>{
+    const open = !!LS('desinchar_b_'+b.id);
+    return open
+      ? `<div class="card"><span class="pill">EXTRA</span><h2 style="margin-top:10px">${esc(b.nome)}</h2>${b.corpo()}</div>`
+      : `<div class="card"><span class="pill">EXTRA</span><h2 style="margin-top:10px">${esc(b.nome)}</h2><p class="soft">${esc(b.desc)}</p>
+          <input class="txt" id="bc_${b.id}" placeholder="Código do extra" autocomplete="off">
+          <button class="btn sec" onclick="unlockBump('${b.id}')">Liberar</button>
+          <p class="soft" id="be_${b.id}" style="color:var(--accent);display:none">Código incorreto.</p></div>`;
+  }).join('');
+}
+function unlockBump(id){
+  const ok = document.getElementById('bc_'+id).value.trim().toUpperCase() === String((CONFIG.BUMP_CODES||{})[id]||'').toUpperCase();
+  document.getElementById('be_'+id).style.display = ok ? 'none' : 'block';
+  if (ok){ SS('desinchar_b_'+id, true); renderBumps(); }
+}
+
 let mxFiltro = 'perfil';
 function mxOk(m){
   const r = st.r||[];
@@ -371,7 +468,7 @@ function mealsFor(d){
     return {h, t:applySwaps(o.t), ing:o.ing.map(swapIng), si};
   });
 }
-function fase(d){ return d<=7?'Fase 1 · Desinchar':d<=14?'Fase 2 · Equilibrar':'Fase 3 · Manter'; }
+function fase(d){ return d<=7?'Fase 1 · Desinchar':d<=14?'Fase 2 · Destravar':'Fase 3 · Definir'; }
 
 /* ===== TELAS ===== */
 function renderHoje(){
@@ -421,12 +518,56 @@ function renderGuia(){
   document.getElementById('gYes').innerHTML=p.yes.map(x=>`<li>${esc(x)}</li>`).join('');
   document.getElementById('gNo').innerHTML=p.no.map(x=>`<li>${esc(x)}</li>`).join('');
 }
+const MARCOS = [0,7,14,21];
+function renderDiario(){
+  const d = st.diario || {};
+  document.getElementById('diario').innerHTML = MARCOS.map(m=>`
+    <div class="card" style="padding:14px 16px">
+      <div class="drow"><b>${m===0?'Dia 0':'Dia '+m}</b>
+        <input class="txt" type="number" inputmode="decimal" step="0.5" placeholder="Cm" value="${d[m]&&d[m].c!=null?d[m].c:''}" onchange="saveDiario(${m},'c',this.value)">
+        <input class="txt" type="number" inputmode="numeric" min="0" max="10" placeholder="0–10" value="${d[m]&&d[m].n!=null?d[m].n:''}" onchange="saveDiario(${m},'n',this.value)">
+      </div>
+      ${m===0?'<p class="hint soft" style="margin:8px 0 0;font-size:12px">Faça hoje, antes de começar o dia 1.</p>':''}
+    </div>`).join('');
+  const feitos = MARCOS.filter(m=>d[m] && d[m].c!=null);
+  const box = document.getElementById('diarioRes');
+  if (feitos.length >= 2 && d[0] && d[0].c!=null){
+    const ult = feitos[feitos.length-1];
+    const dc = (d[0].c - d[ult].c);
+    const dn = (d[0].n!=null && d[ult].n!=null) ? (d[0].n - d[ult].n) : null;
+    box.style.display='block';
+    box.innerHTML = `<h2>Sua evolução até o dia ${ult}</h2>
+      <p style="margin:0">Cintura: <b>${dc>0?'−':dc<0?'+':''}${Math.abs(dc).toFixed(1).replace('.',',')} cm</b>${dn!=null?` · Inchaço: <b>${dn>0?'−':dn<0?'+':''}${Math.abs(dn)} pontos</b>`:''}</p>
+      <p class="soft" style="margin:8px 0 0;font-size:13px">${dc>0||dn>0?'Ótimo, continue seguindo o plano do seu tipo.':'Cada corpo tem seu tempo. Confira se está bebendo água e seguindo a lista do que evitar.'}</p>`;
+  } else box.style.display='none';
+}
+function saveDiario(m,k,v){
+  st.diario = st.diario || {};
+  st.diario[m] = st.diario[m] || {};
+  const n = parseFloat(String(v).replace(',','.'));
+  st.diario[m][k] = isNaN(n) ? null : (k==='n' ? Math.max(0,Math.min(10,Math.round(n))) : n);
+  SS('desinchar_plano',st); renderDiario();
+}
+function renderCola(){
+  const p = PERFIS[st.p];
+  document.getElementById('cola').innerHTML = `
+    <div style="font-size:13px;letter-spacing:.12em;font-weight:700">MAPA DO INCHAÇO · MÉTODO 3D</div>
+    <h1>${esc(p.n)}${st.n?' · '+esc(st.n):''}</h1>
+    <p style="font-size:15px;margin:0">${esc(p.d)}</p>
+    <div class="cg">
+      <div><h2>✅ PRIORIZE</h2><ul>${p.yes.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+      <div><h2>⛔ EVITE</h2><ul>${p.no.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    </div>
+    <h2 style="margin-top:6mm">TODO DIA</h2>
+    <ul>${CHECK.map(c=>`<li>☐ ${esc(c)}</li>`).join('')}</ul>`;
+}
+
 function renderBonus(){
   const li=a=>'<ol style="margin:0;padding-left:20px;line-height:1.7">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ol>';
   document.getElementById('bCha').innerHTML=li(BONUS_CHA);
   document.getElementById('bFora').innerHTML=li(BONUS_FORA);
   document.getElementById('bDoce').innerHTML=li(BONUS_DOCE);
-  renderMx();
+  renderMx(); renderBumps();
 }
 
 /* ===== FLUXO ===== */
@@ -455,12 +596,25 @@ function fromQuiz(){
   return {p:q.best, r:((q.ans&&q.ans.restr)||[]).map(i=>map[i]).filter(Boolean), n:q.nome||'', dia:1};
 }
 function boot(){
+  // Link de entrega com o código embutido (?c=CODIGO): libera o acesso sem digitar.
+  // Também aceita os códigos dos bumps (ex: ?c=DESINCHA21&b=MARMITA30).
+  try {
+    const q = new URLSearchParams(location.search);
+    const c = (q.get('c')||'').trim().toUpperCase();
+    if (c && c === CONFIG.ACCESS_CODE.toUpperCase()) SS('desinchar_ok', true);
+    (q.getAll('b')).forEach(v=>{
+      const b = v.trim().toUpperCase();
+      if (b === CONFIG.BUMP_CODE.toUpperCase()) SS('desinchar_mx', true);
+      Object.entries(CONFIG.BUMP_CODES||{}).forEach(([id,code])=>{ if (b === code.toUpperCase()) SS('desinchar_b_'+id, true); });
+    });
+    if (c || q.get('b')) history.replaceState(null, '', location.pathname); // tira o código da barra de endereço
+  } catch(e){}
   if(CONFIG.ACCESS_CODE && !LS('desinchar_ok')) return view('gate');
   if(!st.p){ const q=fromQuiz(); if(q){ st=q; SS('desinchar_plano',st); } }
   if(!st.p){ buildSetup(); return view('setup'); }
   curDay=st.dia||1;
   document.getElementById('tabs').style.display='flex';
-  renderHoje(); renderGuia(); renderBonus(); renderCompras();
+  renderHoje(); renderGuia(); renderBonus(); renderCompras(); renderDiario(); renderCola();
   view('v-hoje');
 }
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
