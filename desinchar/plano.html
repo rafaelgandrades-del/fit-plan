@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Plano — Desinchar 21</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0B6E52">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#10201A;--ink-soft:#5C7069;--bg:#EFF3F0;--card:#fff;--line:rgba(16,32,26,.09);--primary:#0B6E52;--primary-d:#084F3B;--primary-l:#E3F2EA;--accent:#FF5B35;--shadow:0 1px 2px rgba(16,32,26,.04),0 8px 24px -12px rgba(16,32,26,.18)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Work Sans',-apple-system,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:520px;margin:auto;padding:18px 16px 96px}
+.brand{font-family:'Bebas Neue';font-size:24px;letter-spacing:.03em;text-align:center;margin:2px 0 14px}.brand span{color:var(--primary)}
+h1{font-family:'Bebas Neue';font-weight:400;font-size:38px;line-height:1;margin:4px 0 8px}
+h2{font-size:20px;margin:0 0 8px}
+p{line-height:1.5}.soft{color:var(--ink-soft)}
+.card{background:var(--card);border-radius:18px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.pill{display:inline-block;background:var(--primary-l);color:var(--primary-d);font-size:12px;font-weight:700;padding:6px 10px;border-radius:99px;letter-spacing:.04em}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font:700 16px 'Work Sans';background:var(--accent);color:#fff;cursor:pointer}
+.btn.sec{background:var(--primary)}
+input.txt,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--line);font:500 16px 'Work Sans';margin:8px 0;background:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:9px 14px;font:600 14px 'Work Sans';cursor:pointer}
+.chip.sel{border-color:var(--primary);background:var(--primary-l)}
+.hero{background:linear-gradient(140deg,var(--primary),var(--primary-d));color:#fff;border-radius:20px;padding:20px;margin-bottom:14px}
+.hero .pill{background:rgba(255,255,255,.18);color:#fff}
+.prog{height:8px;background:rgba(255,255,255,.25);border-radius:99px;overflow:hidden;margin-top:14px}.prog i{display:block;height:100%;background:var(--accent)}
+.days{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{flex:0 0 auto;width:48px;height:58px;border-radius:14px;border:0;background:#fff;box-shadow:var(--shadow);font:700 16px 'Work Sans';cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.day small{font-size:10px;font-weight:600;color:var(--ink-soft)}
+.day.on{background:var(--primary);color:#fff}.day.on small{color:#fff}
+.day.done{outline:2px solid var(--primary)}
+.meal{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.meal:last-child{border:0}
+.meal .h{font-size:11px;font-weight:700;color:var(--primary);min-width:62px;text-transform:uppercase;padding-top:3px}
+.meal .sw{margin-left:auto;background:none;border:0;font-size:18px;cursor:pointer;opacity:.6}
+.tip{background:#FFF6E8;border-radius:14px;padding:14px;font-size:15px;line-height:1.45}
+.ck{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+.ck:last-child{border:0}
+.ck .b{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+.ck.on .b{background:var(--primary);border-color:var(--primary)}
+.ck.on span:last-child{text-decoration:line-through;color:var(--ink-soft)}
+.ck .q{margin-left:auto;color:var(--ink-soft);font-size:13px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cols ul{margin:6px 0 0;padding-left:18px;line-height:1.6;font-size:14px}
+.tabs{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+.tabs div{display:flex;max-width:520px;width:100%}
+.tabs button{flex:1;border:0;background:none;padding:10px 4px 12px;font:600 11px 'Work Sans';color:var(--ink-soft);cursor:pointer}
+.tabs button b{display:block;font-size:20px;margin-bottom:2px}
+.tabs button.on{color:var(--primary)}
+.view{display:none}.view.on{display:block}
+.disc{font-size:12px;color:var(--ink-soft);text-align:center;line-height:1.5;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">DESINCHAR<span>21</span></div>
+
+  <!-- ACESSO -->
+  <section id="gate" class="view">
+    <span class="pill">ÁREA DA ALUNA</span>
+    <h1>Bem-vinda ao seu plano</h1>
+    <p class="soft">Digite o código de acesso que você recebeu no e-mail ou no WhatsApp após a compra.</p>
+    <input class="txt" id="code" placeholder="Código de acesso" autocomplete="off">
+    <button class="btn" onclick="checkCode()">Entrar</button>
+    <p class="soft" id="codeErr" style="color:var(--accent);display:none">Código incorreto. Confira a mensagem da compra.</p>
+  </section>
+
+  <!-- CONFIRMAR PERFIL (se não fez o quiz neste aparelho) -->
+  <section id="setup" class="view">
+    <span class="pill">AJUSTE SEU PLANO</span>
+    <h1>Confirme seu perfil</h1>
+    <div class="card">
+      <h2>Qual foi o resultado do seu teste?</h2>
+      <select id="selP"></select>
+      <h2 style="margin-top:14px">Restrições</h2>
+      <div class="chips" id="selR"></div>
+      <input class="txt" id="selN" placeholder="Seu primeiro nome">
+      <button class="btn sec" style="margin-top:8px" onclick="saveSetup()">Montar meu plano</button>
+    </div>
+  </section>
+
+  <!-- HOJE -->
+  <section id="v-hoje" class="view">
+    <div class="hero">
+      <span class="pill" id="hPerfil"></span>
+      <h1 id="hTitle" style="margin-top:10px"></h1>
+      <div id="hFase" style="opacity:.9"></div>
+      <div class="prog"><i id="hProg"></i></div>
+      <small id="hProgT" style="opacity:.85;display:block;margin-top:6px"></small>
+    </div>
+    <div class="days" id="days"></div>
+    <div class="card"><h2 id="dTitle"></h2><div id="dMeals"></div></div>
+    <div class="card"><h2>Dica do dia</h2><div class="tip" id="dTip"></div></div>
+    <div class="card"><h2>Checklist de hoje</h2><div id="dCheck"></div></div>
+  </section>
+
+  <!-- COMPRAS -->
+  <section id="v-compras" class="view">
+    <h1>Lista de compras</h1>
+    <div class="chips" id="wk"></div>
+    <p class="soft" style="margin-top:0">Toque para marcar o que já está no carrinho.</p>
+    <div class="card" id="shop"></div>
+  </section>
+
+  <!-- GUIA -->
+  <section id="v-guia" class="view">
+    <h1>Seu guia</h1>
+    <div class="card"><h2 id="gTitle"></h2><p class="soft" id="gDesc" style="margin:0"></p></div>
+    <div class="card cols">
+      <div><b style="color:var(--primary)">✅ Priorize</b><ul id="gYes"></ul></div>
+      <div><b style="color:var(--accent)">⛔ Evite</b><ul id="gNo"></ul></div>
+    </div>
+    <div class="card"><h2>As 3 fases</h2>
+      <p><b>Dias 1–7 · Desinchar:</b> refeições leves, mais água e chás, nada de industrializados. É quando você mais sente a diferença.</p>
+      <p><b>Dias 8–14 · Equilibrar:</b> o intestino se regula e a fome fica mais estável. Voltam alguns alimentos.</p>
+      <p style="margin-bottom:0"><b>Dias 15–21 · Manter:</b> você aprende a montar o prato sozinha para não voltar a inchar.</p>
+    </div>
+  </section>
+
+  <!-- BÔNUS -->
+  <section id="v-bonus" class="view">
+    <h1>Bônus</h1>
+    <div class="card"><h2>🍵 15 chás e sucos para desinchar</h2><div id="bCha"></div></div>
+    <div class="card"><h2>🍽️ Comendo fora sem estragar tudo</h2><div id="bFora"></div></div>
+    <div class="card"><h2>🍫 Doces sem açúcar para a TPM</h2><div id="bDoce"></div></div>
+
+    <!-- ORDER BUMP: 30 MARMITAS -->
+    <div class="card" id="mxLocked">
+      <span class="pill">EXTRA</span>
+      <h2 style="margin-top:10px">🥡 30 Marmitas Fit para a Semana Toda</h2>
+      <p class="soft">Receitas para cozinhar no domingo, congelar e ter almoço e jantar prontos a semana inteira.</p>
+      <input class="txt" id="mxCode" placeholder="Código das marmitas" autocomplete="off">
+      <button class="btn sec" onclick="unlockMx()">Liberar marmitas</button>
+      <p class="soft" id="mxErr" style="color:var(--accent);display:none">Código incorreto.</p>
+      <a class="btn" id="mxBuy" style="margin-top:10px;display:none;text-decoration:none;text-align:center" target="_blank" rel="noopener">Quero as 30 marmitas</a>
+    </div>
+    <div id="mxOpen" style="display:none">
+      <div class="card">
+        <h2>🥡 30 Marmitas Fit</h2>
+        <div class="chips" id="mxFilter"></div>
+        <div id="mxList"></div>
+      </div>
+      <div class="card"><h2>❄️ Como congelar sem perder o sabor</h2><div id="mxFreeze"></div></div>
+      <div class="card"><h2>⏱️ Domingo de preparo em 2 horas</h2><div id="mxSunday"></div></div>
+    </div>
+    <p class="disc">Conteúdo educativo, que não substitui consulta com médico ou nutricionista. Gestantes, lactantes, pessoas com doença renal, hipertensão, diabetes ou em uso de medicação devem consultar um profissional antes de mudar a alimentação.</p>
+  </section>
+</div>
+
+<nav class="tabs" id="tabs" style="display:none"><div>
+  <button data-v="v-hoje" class="on"><b>📅</b>Hoje</button>
+  <button data-v="v-compras"><b>🛒</b>Compras</button>
+  <button data-v="v-guia"><b>📖</b>Guia</button>
+  <button data-v="v-bonus"><b>🎁</b>Bônus</button>
+</div></nav>
+
+<script>
+/* ===== CONFIGURAÇÃO ===== */
+const CONFIG = {
+  // Código que a compradora recebe após o pagamento (coloque na mensagem de obrigado da Kiwify/Cakto).
+  // Troque de tempos em tempos. Deixe '' para desligar a tela de código.
+  ACCESS_CODE: 'DESINCHA21',
+  // Order bump "30 Marmitas Fit": código enviado só para quem comprou o bump.
+  BUMP_CODE: 'MARMITA30',
+  // Link de compra avulsa das marmitas (opcional). Deixe '' para esconder o botão.
+  BUMP_URL: '',
+};
+
+/* ===== PERFIS ===== */
+const PERFIS = {
+  h:{n:'Inchaço Hormonal', d:'Seu inchaço acompanha o ciclo hormonal. O foco é magnésio, menos açúcar e refeições regulares para evitar picos de vontade de doce.',
+     yes:['Folhas verde-escuras','Banana e abacate','Sementes de abóbora','Ovos e peixes','Chá de camomila'], no:['Doces e chocolate ao leite','Refrigerante','Pular refeições','Excesso de café','Embutidos']},
+  i:{n:'Intestino Preso', d:'Seu intestino está lento. O foco é fibra com bastante água, frutas com casca e regularidade nos horários.',
+     yes:['Mamão, ameixa e kiwi','Aveia, chia e linhaça','Legumes cozidos','2 litros de água','Azeite'], no:['Pão branco e biscoito','Pouca água','Excesso de queijo','Frituras','Segurar a vontade de ir ao banheiro']},
+  r:{n:'Retenção de Líquido', d:'Seu corpo está segurando água. O foco é tirar o sal escondido, aumentar água e potássio e movimentar as pernas.',
+     yes:['Melancia, pepino e melão','Água de coco','Ervas frescas como tempero','Banana e batata-doce','Chá de hibisco'], no:['Tempero pronto e caldo em cubo','Embutidos e salgadinhos','Comida congelada pronta','Molho shoyu','Ficar horas parada']},
+  g:{n:'Inchaço por Fermentação', d:'Alguns alimentos fermentam no seu intestino. O foco é diminuir os que geram gás e comer com calma.',
+     yes:['Legumes cozidos (cenoura, abobrinha)','Arroz','Gengibre e hortelã','Mamão papaia','Proteína magra'], no:['Feijão, lentilha e grão-de-bico (no começo)','Brócolis, repolho e couve-flor crus','Refrigerante e chiclete','Comer rápido','Adoçante em excesso']},
+  c:{n:'Inchaço por Rotina Corrida', d:'Sua rotina bagunça a digestão. O foco é deixar refeições prontas e nunca ficar muitas horas sem comer.',
+     yes:['Marmitas feitas no domingo','Overnight oats','Ovos cozidos prontos na geladeira','Frutas fáceis (banana, maçã)','Castanhas na bolsa'], no:['Ficar mais de 4h sem comer','Delivery no improviso','Lanche de padaria','Jantar enorme','Café no lugar de refeição']},
+};
+
+/* ===== BANCO DE REFEIÇÕES =====
+   no: perfis que não devem receber essa opção   ing: itens da lista de compras */
+const M = {
+  cafe:[
+    {t:'Ovos mexidos com espinafre, 1 fatia de pão integral e chá de camomila', ing:['Ovos','Espinafre','Pão integral','Chá de camomila']},
+    {t:'Tapioca com ovo e tomate e chá de gengibre', ing:['Goma de tapioca','Ovos','Tomate','Gengibre']},
+    {t:'Mamão com aveia e chia e café sem açúcar', ing:['Mamão','Aveia','Chia','Café'], no:['g']},
+    {t:'Iogurte natural com banana e canela', ing:['Iogurte natural','Banana','Canela']},
+    {t:'Omelete de queijo branco com orégano e 1 fatia de melão', ing:['Ovos','Queijo branco','Melão']},
+    {t:'Pão integral com abacate amassado e ovo cozido', ing:['Pão integral','Abacate','Ovos'], no:['g']},
+    {t:'Crepioca com banana e canela', ing:['Ovos','Goma de tapioca','Banana','Canela']},
+  ],
+  lanche:[
+    {t:'1 maçã e 1 punhado de castanhas', ing:['Maçã','Castanhas']},
+    {t:'1 banana com 1 colher de pasta de amendoim', ing:['Banana','Pasta de amendoim']},
+    {t:'Iogurte natural com 1 colher de linhaça', ing:['Iogurte natural','Linhaça']},
+    {t:'1 fatia grande de melancia e água de coco', ing:['Melancia','Água de coco']},
+    {t:'2 ameixas secas e 1 kiwi', ing:['Ameixa seca','Kiwi'], no:['g']},
+    {t:'1 ovo cozido e rodelas de pepino', ing:['Ovos','Pepino']},
+    {t:'Mamão papaia com hortelã', ing:['Mamão','Hortelã']},
+    {t:'1 pera e chá de hibisco', ing:['Pera','Chá de hibisco']},
+  ],
+  almoco:[
+    {t:'Frango grelhado ao limão, arroz integral, feijão e salada de folhas', ing:['Peito de frango','Limão','Arroz integral','Feijão','Folhas verdes'], no:['g']},
+    {t:'Peixe assado com batata-doce e cenoura cozida', ing:['Filé de peixe','Batata-doce','Cenoura']},
+    {t:'Carne moída magra com abobrinha, arroz e salada de pepino', ing:['Carne moída magra','Abobrinha','Arroz','Pepino']},
+    {t:'Frango desfiado com purê de abóbora e vagem', ing:['Peito de frango','Abóbora','Vagem']},
+    {t:'Tilápia grelhada, arroz, lentilha e salada de tomate', ing:['Filé de tilápia','Arroz','Lentilha','Tomate'], no:['g']},
+    {t:'Sobrecoxa assada com ervas, batata e abobrinha', ing:['Sobrecoxa de frango','Batata','Abobrinha','Ervas frescas']},
+    {t:'Omelete de forno com legumes, arroz e salada de folhas', ing:['Ovos','Cenoura','Abobrinha','Arroz','Folhas verdes']},
+  ],
+  jantar:[
+    {t:'Sopa de abóbora com gengibre e frango desfiado', ing:['Abóbora','Gengibre','Peito de frango']},
+    {t:'Omelete de legumes com salada de folhas', ing:['Ovos','Tomate','Folhas verdes']},
+    {t:'Peixe com abobrinha e tomate no forno', ing:['Filé de peixe','Abobrinha','Tomate']},
+    {t:'Wrap de tapioca com frango e folhas', ing:['Goma de tapioca','Peito de frango','Folhas verdes']},
+    {t:'Creme de mandioquinha com ovo cozido', ing:['Mandioquinha','Ovos']},
+    {t:'Caldo de legumes com carne magra em cubos', ing:['Carne magra','Cenoura','Abobrinha','Batata']},
+    {t:'Salada morna de frango, cenoura e batata-doce', ing:['Peito de frango','Cenoura','Batata-doce']},
+  ],
+};
+const SLOTS = [['Café','cafe'],['Lanche','lanche'],['Almoço','almoco'],['Lanche','lanche'],['Jantar','jantar']];
+const OFFSET = {h:0,i:2,r:4,g:1,c:3};
+
+/* Trocas por restrição: [regex no texto, substituto, troca na lista de compras] */
+const SWAPS = {
+  lactose:[[/Iogurte natural/g,'Iogurte sem lactose'],[/Omelete de queijo branco com orégano/g,'Omelete de ervas com tomate']],
+  gluten:[[/1 fatia de pão integral/g,'1 tapioca pequena'],[/Pão integral com/g,'Tapioca com'],[/aveia/g,'flocos de quinoa']],
+  veg:[[/Frango grelhado ao limão|Tilápia grelhada|Peixe assado|Sobrecoxa assada com ervas|Carne moída magra/g,'Tofu grelhado'],
+       [/Frango desfiado|Peixe/g,'Tofu'],[/frango desfiado/g,'tofu em cubos'],[/com frango/g,'com tofu'],[/carne magra em cubos/g,'tofu em cubos'],[/frango, /g,'tofu, ']],
+};
+const ING_SWAPS = {
+  lactose:{'Iogurte natural':'Iogurte sem lactose','Queijo branco':'Tofu'},
+  gluten:{'Pão integral':'Goma de tapioca','Aveia':'Flocos de quinoa'},
+  veg:{'Peito de frango':'Tofu','Filé de peixe':'Tofu','Filé de tilápia':'Tofu','Sobrecoxa de frango':'Tofu','Carne moída magra':'Tofu','Carne magra':'Tofu'},
+};
+
+const TIPS = {
+  h:['Coma algo a cada 3 a 4 horas: fome acumulada vira vontade de doce à tarde.','Um punhado de sementes de abóbora por dia ajuda na reposição de magnésio.','Na semana da TPM, aumente água e chá e diminua o sal. O inchaço costuma cair mais rápido.'],
+  i:['Fibra sem água trava ainda mais. Beba um copo de água a cada refeição.','Tente ir ao banheiro sempre no mesmo horário, de preferência depois do café.','Fruta com casca tem mais fibra do que suco. Prefira comer a fruta.'],
+  r:['Troque o tempero pronto por alho, cebola, limão e ervas. É onde mais se esconde sal.','A cada hora sentada, levante e caminhe 2 minutos.','Melancia e pepino ajudam na hidratação. Use e abuse.'],
+  g:['Mastigue cada garfada umas 20 vezes. Ar engolido também vira gás.','Hortelã e gengibre depois das refeições ajudam a digestão.','Na fase 3, reintroduza feijão aos poucos, bem cozido e deixado de molho antes.'],
+  c:['Domingo: 1 hora de cozinha garante as marmitas da semana. Veja a lista de compras.','Deixe 6 ovos cozidos na geladeira. São um lanche pronto em segundos.','Não saia de casa sem uma fruta ou castanhas na bolsa.'],
+};
+const CHECK = ['Bebi 2 litros de água','Fiz as 5 refeições','Tomei 1 chá do dia','Caminhei 15 minutos','Evitei industrializados'];
+
+const BONUS_CHA = ['Chá de hibisco com canela','Chá de gengibre com limão','Chá de camomila com erva-doce','Chá de hortelã','Chá verde (até 2 xícaras, fora das refeições)','Chá de cavalinha','Chá de cidreira','Chá de alecrim','Água com pepino e hortelã','Água com limão e gengibre','Suco verde: couve, limão, maçã e gengibre','Suco de melancia com hortelã','Suco de abacaxi com hortelã','Água de coco com limão','Suco de mamão com laranja'];
+const BONUS_FORA = ['No restaurante por quilo: metade do prato de salada e legumes, depois proteína e um pouco de arroz.','Em festa: coma algo leve antes de sair. Fome é o que faz exagerar.','Peça molho à parte e evite fritura e empanados.','No fim de semana: mantenha café e almoço do plano e relaxe em uma refeição só.','Bebida alcoólica: intercale cada dose com 1 copo de água.','Pizza: 2 fatias com salada antes, não 5 sem salada.'];
+const BONUS_DOCE = ['Banana assada com canela','Mousse de cacau com abacate','Iogurte com morango e cacau','Maçã assada com canela e castanhas','Brigadeiro de banana com cacau','Picolé de fruta batida com água de coco'];
+
+/* ===== ORDER BUMP: 30 MARMITAS FIT =====
+   Cada receita rende 4 marmitas.  c: contém (lactose | gluten | carne)  g: evitar no perfil gases */
+const MX = [
+  {n:'Frango ao limão com arroz integral e brócolis', i:'600 g de peito de frango em cubos, 2 xíc. de arroz integral, 1 brócolis, 2 limões, alho, azeite', p:'Tempere o frango com limão, alho e sal e grelhe. Cozinhe o arroz. Cozinhe o brócolis no vapor por 4 min, sem deixar amolecer.', c:['carne'], g:1},
+  {n:'Frango desfiado com purê de abóbora e vagem', i:'600 g de peito de frango, 1 kg de abóbora cabotiá, 300 g de vagem, cebola, alho, cheiro-verde', p:'Cozinhe o frango e desfie, refogando com cebola e alho. Cozinhe a abóbora e amasse com 1 fio de azeite. Cozinhe a vagem no vapor.', c:['carne']},
+  {n:'Carne moída com abobrinha e arroz', i:'500 g de patinho moído, 2 abobrinhas, 1 tomate, cebola, alho, 2 xíc. de arroz', p:'Refogue a carne com cebola e alho até secar. Junte a abobrinha em cubos e o tomate e cozinhe por 5 min. Sirva com arroz.', c:['carne']},
+  {n:'Escondidinho de batata-doce com frango', i:'800 g de batata-doce, 500 g de frango desfiado, 1 cebola, 2 tomates, cheiro-verde', p:'Faça um purê com a batata-doce cozida. Refogue o frango com cebola e tomate. Monte as marmitas em camadas: frango embaixo, purê em cima.', c:['carne']},
+  {n:'Tilápia com legumes assados e arroz', i:'4 filés de tilápia, 2 cenouras, 1 abobrinha, 1 pimentão, limão, ervas, 2 xíc. de arroz', p:'Asse os legumes a 200 °C por 25 min. Tempere a tilápia com limão e ervas e asse por 15 min. Sirva com arroz.', c:['carne']},
+  {n:'Strogonoff leve de frango com arroz e cenoura', i:'600 g de frango em tiras, 1 pote de iogurte natural, 2 col. de extrato de tomate, cogumelos (opcional), 2 cenouras, arroz', p:'Doure o frango e junte o extrato e os cogumelos. Desligue o fogo e misture o iogurte. Cozinhe a cenoura no vapor.', c:['carne','lactose']},
+  {n:'Almôndegas ao sugo com purê de mandioquinha', i:'500 g de patinho moído, 1 ovo, 3 col. de farinha de aveia, molho de tomate caseiro, 800 g de mandioquinha', p:'Misture carne, ovo e aveia e faça bolinhas. Asse por 20 min e cozinhe no molho por 10 min. Faça o purê com a mandioquinha cozida.', c:['carne','gluten']},
+  {n:'Frango ao curry com arroz e abobrinha', i:'600 g de frango em cubos, 1 col. de curry, 200 ml de leite de coco, 2 abobrinhas, arroz', p:'Doure o frango com o curry. Junte o leite de coco e a abobrinha e cozinhe por 8 min. Sirva com arroz.', c:['carne']},
+  {n:'Carne de panela com batata e cenoura', i:'700 g de músculo em cubos, 3 batatas, 2 cenouras, cebola, alho, louro', p:'Sele a carne, junte água e louro e cozinhe na pressão por 35 min. Junte batata e cenoura e cozinhe por mais 10 min, sem pressão.', c:['carne']},
+  {n:'Omelete de forno com legumes e arroz', i:'8 ovos, 1 cenoura ralada, 1 abobrinha ralada, 1 tomate, espinafre, 2 xíc. de arroz', p:'Bata os ovos com os legumes e asse em forma untada a 180 °C por 25 min. Corte em 4 e sirva com arroz.', c:[]},
+  {n:'Sobrecoxa assada com ervas, batata e vagem', i:'4 sobrecoxas sem pele, 4 batatas, 300 g de vagem, alecrim, alho, limão', p:'Tempere a sobrecoxa e asse junto com a batata a 200 °C por 40 min. Cozinhe a vagem no vapor.', c:['carne']},
+  {n:'Picadinho de carne com abóbora e arroz', i:'600 g de patinho em cubos, 500 g de abóbora, cebola, alho, tomate, arroz', p:'Refogue a carne até dourar e junte o tomate e um pouco de água. Junte a abóbora em cubos e cozinhe até ficar macia.', c:['carne']},
+  {n:'Frango xadrez leve com arroz', i:'600 g de frango em cubos, 1 pimentão vermelho, 1 pimentão verde, 1 cebola, 2 col. de shoyu light, amendoim, arroz', p:'Salteie o frango em fogo alto, junte os legumes e o shoyu e finalize com o amendoim. Use pouco shoyu: é salgado.', c:['carne','gluten']},
+  {n:'Peixe ao molho de tomate com purê de batata-doce', i:'4 filés de peixe branco, molho de tomate caseiro, 800 g de batata-doce, manjericão', p:'Cozinhe o peixe no molho por 10 min. Faça o purê de batata-doce.', c:['carne']},
+  {n:'Arroz de forno com frango e legumes', i:'3 xíc. de arroz cozido, 400 g de frango desfiado, 1 cenoura, ervilha, milho, tomate, 2 ovos', p:'Misture tudo com os ovos batidos e asse a 180 °C por 20 min.', c:['carne']},
+  {n:'Quibe de forno de abóbora com carne', i:'1 xíc. de trigo para quibe, 500 g de abóbora cozida, 400 g de patinho moído, hortelã, cebola', p:'Hidrate o trigo e misture com a abóbora amassada. Monte camadas com a carne refogada e asse por 30 min.', c:['carne','gluten']},
+  {n:'Lasanha de abobrinha com carne moída', i:'3 abobrinhas em lâminas, 500 g de patinho moído, molho de tomate, 200 g de queijo branco', p:'Grelhe as lâminas de abobrinha. Monte camadas de abobrinha, carne ao molho e queijo e asse por 20 min.', c:['carne','lactose']},
+  {n:'Frango com quiabo e arroz', i:'600 g de frango em cubos, 400 g de quiabo, cebola, alho, tomate, arroz', p:'Refogue o quiabo com limão para tirar a baba. Junte ao frango refogado com tomate.', c:['carne']},
+  {n:'Carne moída com purê de couve-flor', i:'500 g de patinho moído, 1 couve-flor, cebola, alho, cheiro-verde', p:'Cozinhe a couve-flor e bata até virar purê. Refogue a carne e monte as marmitas.', c:['carne'], g:1},
+  {n:'Feijoada leve', i:'500 g de feijão preto, 400 g de lombo suíno magro, 1 paio pequeno (opcional), couve, laranja, arroz', p:'Deixe o feijão de molho por 12 h e troque a água. Cozinhe com o lombo. Sirva com couve refogada e arroz. Laranja à parte.', c:['carne'], g:1},
+  {n:'Lentilha com legumes e arroz', i:'2 xíc. de lentilha, 2 cenouras, 1 abobrinha, cebola, alho, cominho, arroz', p:'Deixe a lentilha de molho por 2 h. Cozinhe com os legumes e o cominho por 20 min.', c:[], g:1},
+  {n:'Grão-de-bico ao curry com arroz', i:'2 xíc. de grão-de-bico cozido, 200 ml de leite de coco, curry, tomate, espinafre, arroz', p:'Refogue o tomate com curry, junte o grão-de-bico e o leite de coco e finalize com espinafre.', c:[], g:1},
+  {n:'Tofu grelhado com legumes e arroz', i:'400 g de tofu firme, brócolis, cenoura, abobrinha, gengibre, arroz', p:'Seque o tofu, corte em cubos e grelhe até dourar. Salteie os legumes com gengibre.', c:[]},
+  {n:'Hambúrguer caseiro de frango com batata rústica', i:'600 g de frango moído, 1 cebola ralada, cheiro-verde, 4 batatas, alecrim', p:'Modele 8 hambúrgueres e grelhe. Asse a batata em gomos com alecrim por 35 min.', c:['carne']},
+  {n:'Panqueca de aveia recheada com frango', i:'4 ovos, 1 xíc. de farinha de aveia, 1 xíc. de leite, 400 g de frango desfiado, molho de tomate', p:'Bata ovos, aveia e leite e faça 8 panquecas. Recheie com o frango e cubra com molho.', c:['carne','gluten','lactose']},
+  {n:'Escondidinho de mandioca com carne', i:'1 kg de mandioca, 500 g de patinho moído, cebola, tomate, cheiro-verde', p:'Faça um purê com a mandioca cozida e um pouco da água do cozimento. Monte com a carne refogada.', c:['carne']},
+  {n:'Falafel assado com arroz e cenoura', i:'2 xíc. de grão-de-bico demolhado (cru), cebola, alho, salsa, cominho, arroz, cenoura', p:'Bata o grão-de-bico cru com os temperos, modele bolinhos e asse a 200 °C por 25 min, virando na metade.', c:[], g:1},
+  {n:'Frango com batata-doce e chuchu', i:'600 g de frango em cubos, 2 batatas-doces, 2 chuchus, cebola, alho, salsinha', p:'Refogue o frango e junte a batata-doce e o chuchu em cubos com um pouco de água. Cozinhe por 15 min.', c:['carne']},
+  {n:'Risoto de abóbora com frango', i:'2 xíc. de arroz arbório ou comum, 500 g de abóbora, 400 g de frango desfiado, caldo de legumes caseiro, parmesão (opcional)', p:'Refogue o arroz, junte o caldo aos poucos e a abóbora em cubos. Finalize com o frango e, se quiser, parmesão.', c:['carne','lactose']},
+  {n:'Peixe com purê de abóbora e espinafre', i:'4 filés de peixe, 800 g de abóbora, 1 maço de espinafre, alho, limão', p:'Asse o peixe com limão. Faça o purê de abóbora. Refogue o espinafre com alho.', c:['carne']},
+];
+const MX_FREEZE = [
+  'Espere a comida esfriar (no máximo 2 h fora da geladeira) antes de fechar e congelar.',
+  'Use potes com tampa próprios para freezer e cole uma etiqueta com o nome e a data.',
+  'No freezer, as marmitas duram até 3 meses. Na geladeira, consuma em até 3 dias.',
+  'Descongele na geladeira de um dia para o outro, ou direto no micro-ondas. Nunca na pia.',
+  'Não recongele uma marmita que já foi descongelada.',
+  'Folhas cruas, ovo cozido inteiro e batata inglesa cozida em pedaços não congelam bem. Prefira purês e legumes cozidos.',
+];
+const MX_SUNDAY = [
+  '0:00 — Coloque arroz e feijão (ou lentilha) para cozinhar e preaqueça o forno.',
+  '0:10 — Tempere as proteínas e coloque as assadas no forno.',
+  '0:30 — Pique e asse ou cozinhe no vapor os legumes da semana.',
+  '1:00 — Refogue as proteínas de panela (carne moída, frango desfiado).',
+  '1:30 — Faça os purês (abóbora, batata-doce, mandioquinha).',
+  '1:45 — Monte as marmitas, espere esfriar, etiquete e guarde: 3 na geladeira e o resto no freezer.',
+];
+
+let mxFiltro = 'perfil';
+function mxOk(m){
+  const r = st.r||[];
+  if (r.includes('lactose') && m.c.includes('lactose')) return false;
+  if (r.includes('gluten') && m.c.includes('gluten')) return false;
+  if (r.includes('veg') && m.c.includes('carne')) return false;
+  if (st.p==='g' && m.g) return false;
+  return true;
+}
+function renderMx(){
+  const open = !!LS('desinchar_mx');
+  document.getElementById('mxLocked').style.display = open ? 'none' : 'block';
+  document.getElementById('mxOpen').style.display = open ? 'block' : 'none';
+  const buy = document.getElementById('mxBuy');
+  if (CONFIG.BUMP_URL){ buy.href = CONFIG.BUMP_URL; buy.style.display = 'block'; }
+  if (!open) return;
+  const n = MX.filter(mxOk).length;
+  document.getElementById('mxFilter').innerHTML =
+    `<button class="chip ${mxFiltro==='perfil'?'sel':''}" onclick="mxFiltro='perfil';renderMx()">Para o meu perfil (${n})</button>`+
+    `<button class="chip ${mxFiltro==='todas'?'sel':''}" onclick="mxFiltro='todas';renderMx()">Todas (30)</button>`;
+  const lbl = {lactose:'contém lactose', gluten:'contém glúten'};
+  document.getElementById('mxList').innerHTML = MX.map((m,k)=>({m,k})).filter(({m})=>mxFiltro==='todas'||mxOk(m)).map(({m,k})=>{
+    const tags = m.c.filter(x=>lbl[x]).map(x=>lbl[x]);
+    if (!m.c.includes('carne')) tags.unshift('vegetariana');
+    if (m.g) tags.push('pode gerar gases');
+    return `<details style="padding:12px 0;border-bottom:1px solid var(--line)">
+      <summary style="font-weight:700;cursor:pointer">${k+1}. ${esc(m.n)}</summary>
+      <p class="soft" style="margin:8px 0 4px;font-size:13px">Rende 4 marmitas${tags.length?' · '+tags.join(' · '):''}</p>
+      <p style="margin:6px 0"><b>Ingredientes:</b> ${esc(m.i)}.</p>
+      <p style="margin:6px 0"><b>Preparo:</b> ${esc(m.p)}</p></details>`;
+  }).join('');
+  const li=a=>'<ol style="margin:0;padding-left:20px;line-height:1.7">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ol>';
+  document.getElementById('mxFreeze').innerHTML = li(MX_FREEZE);
+  document.getElementById('mxSunday').innerHTML = li(MX_SUNDAY);
+}
+function unlockMx(){
+  const ok = document.getElementById('mxCode').value.trim().toUpperCase() === CONFIG.BUMP_CODE.toUpperCase();
+  document.getElementById('mxErr').style.display = ok ? 'none' : 'block';
+  if (ok){ SS('desinchar_mx', true); renderMx(); }
+}
+
+/* ===== ESTADO ===== */
+const LS = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } };
+const SS = (k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let st = LS('desinchar_plano') || {};
+let curDay = 1, curWk = 1;
+
+function view(id){ document.querySelectorAll('.view').forEach(v=>v.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0,0); }
+
+/* ===== GERAÇÃO DO PLANO ===== */
+function applySwaps(t){ (st.r||[]).forEach(k=>(SWAPS[k]||[]).forEach(([a,b])=>t=t.replace(a,b))); return t; }
+function swapIng(i){ (st.r||[]).forEach(k=>{ if(ING_SWAPS[k]&&ING_SWAPS[k][i]) i=ING_SWAPS[k][i]; }); return i; }
+function pool(slot){ return M[slot].filter(o=>!(o.no||[]).includes(st.p)); }
+function mealsFor(d){
+  const base = OFFSET[st.p]||0;
+  return SLOTS.map(([h,slot],si)=>{
+    const pl = pool(slot);
+    const extra = ((st.trocas||{})[d+'_'+si])||0;
+    // cada dia avança 1 opção por refeição; o 2º lanche fica deslocado para nunca repetir o 1º
+    const o = pl[(d - 1 + base + (si === 3 ? Math.floor(pl.length/2) : 0) + extra) % pl.length];
+    return {h, t:applySwaps(o.t), ing:o.ing.map(swapIng), si};
+  });
+}
+function fase(d){ return d<=7?'Fase 1 · Desinchar':d<=14?'Fase 2 · Equilibrar':'Fase 3 · Manter'; }
+
+/* ===== TELAS ===== */
+function renderHoje(){
+  const p = PERFIS[st.p];
+  const done = Object.keys(st.feito||{}).filter(k=>(st.feito[k]||[]).length>=CHECK.length).length;
+  document.getElementById('hPerfil').textContent = p.n.toUpperCase();
+  document.getElementById('hTitle').textContent = (st.n?st.n+', ':'') + 'dia ' + curDay + ' de 21';
+  document.getElementById('hFase').textContent = fase(curDay);
+  document.getElementById('hProg').style.width = (done/21*100)+'%';
+  document.getElementById('hProgT').textContent = done + ' de 21 dias completos';
+  const ds = document.getElementById('days'); ds.innerHTML='';
+  for(let d=1; d<=21; d++){
+    const b=document.createElement('button');
+    const full=((st.feito||{})[d]||[]).length>=CHECK.length;
+    b.className='day'+(d===curDay?' on':'')+(full?' done':'');
+    b.innerHTML=`<small>DIA</small>${d}`;
+    b.onclick=()=>{curDay=d; st.dia=d; SS('desinchar_plano',st); renderHoje();};
+    ds.appendChild(b);
+  }
+  setTimeout(()=>ds.children[curDay-1].scrollIntoView({inline:'center',block:'nearest'}),0);
+  document.getElementById('dTitle').textContent = 'Cardápio do dia ' + curDay;
+  document.getElementById('dMeals').innerHTML = mealsFor(curDay).map(m=>
+    `<div class="meal"><div class="h">${m.h}</div><div>${esc(m.t)}</div><button class="sw" title="Trocar" onclick="trocar(${m.si})">🔄</button></div>`).join('');
+  const tp = TIPS[st.p]; document.getElementById('dTip').textContent = tp[(curDay-1)%tp.length];
+  const fe = (st.feito||{})[curDay]||[];
+  document.getElementById('dCheck').innerHTML = CHECK.map((c,i)=>
+    `<div class="ck ${fe.includes(i)?'on':''}" onclick="toggleCk(${i})"><span class="b">${fe.includes(i)?'✓':''}</span><span>${c}</span></div>`).join('');
+}
+function trocar(si){ st.trocas=st.trocas||{}; const k=curDay+'_'+si; st.trocas[k]=(st.trocas[k]||0)+1; SS('desinchar_plano',st); renderHoje(); }
+function toggleCk(i){ st.feito=st.feito||{}; let f=st.feito[curDay]||[]; f=f.includes(i)?f.filter(x=>x!==i):[...f,i]; st.feito[curDay]=f; SS('desinchar_plano',st); renderHoje(); }
+
+function renderCompras(){
+  const wk=document.getElementById('wk');
+  wk.innerHTML=[1,2,3].map(w=>`<button class="chip ${w===curWk?'sel':''}" onclick="curWk=${w};renderCompras()">Semana ${w}</button>`).join('');
+  const cnt={};
+  for(let d=(curWk-1)*7+1; d<=curWk*7; d++) mealsFor(d).forEach(m=>m.ing.forEach(i=>cnt[i]=(cnt[i]||0)+1));
+  const marc=(st.compras||{})[curWk]||[];
+  document.getElementById('shop').innerHTML = Object.keys(cnt).sort((a,b)=>a.localeCompare(b,'pt')).map(i=>
+    `<div class="ck ${marc.includes(i)?'on':''}" onclick='toggleShop(${JSON.stringify(i)})'><span class="b">${marc.includes(i)?'✓':''}</span><span>${esc(i)}</span><span class="q">${cnt[i]}× na semana</span></div>`).join('');
+}
+function toggleShop(i){ st.compras=st.compras||{}; let m=st.compras[curWk]||[]; m=m.includes(i)?m.filter(x=>x!==i):[...m,i]; st.compras[curWk]=m; SS('desinchar_plano',st); renderCompras(); }
+
+function renderGuia(){
+  const p=PERFIS[st.p];
+  document.getElementById('gTitle').textContent=p.n;
+  document.getElementById('gDesc').textContent=p.d;
+  document.getElementById('gYes').innerHTML=p.yes.map(x=>`<li>${esc(x)}</li>`).join('');
+  document.getElementById('gNo').innerHTML=p.no.map(x=>`<li>${esc(x)}</li>`).join('');
+}
+function renderBonus(){
+  const li=a=>'<ol style="margin:0;padding-left:20px;line-height:1.7">'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ol>';
+  document.getElementById('bCha').innerHTML=li(BONUS_CHA);
+  document.getElementById('bFora').innerHTML=li(BONUS_FORA);
+  document.getElementById('bDoce').innerHTML=li(BONUS_DOCE);
+  renderMx();
+}
+
+/* ===== FLUXO ===== */
+function checkCode(){
+  const ok = document.getElementById('code').value.trim().toUpperCase() === CONFIG.ACCESS_CODE.toUpperCase();
+  document.getElementById('codeErr').style.display = ok?'none':'block';
+  if(ok){ SS('desinchar_ok',true); boot(); }
+}
+function buildSetup(){
+  document.getElementById('selP').innerHTML = Object.entries(PERFIS).map(([k,p])=>`<option value="${k}">${p.n}</option>`).join('');
+  const R={lactose:'Sem lactose',gluten:'Sem glúten',veg:'Vegetariana'};
+  const sel=new Set();
+  const box=document.getElementById('selR');
+  box.innerHTML=Object.entries(R).map(([k,l])=>`<button class="chip" data-k="${k}">${l}</button>`).join('');
+  box.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ b.classList.toggle('sel'); sel.has(b.dataset.k)?sel.delete(b.dataset.k):sel.add(b.dataset.k); });
+  window.__sel=sel;
+}
+function saveSetup(){
+  st={p:document.getElementById('selP').value, r:[...window.__sel], n:document.getElementById('selN').value.trim().split(' ')[0], dia:1};
+  SS('desinchar_plano',st); boot();
+}
+function fromQuiz(){
+  // aproveita o resultado do quiz feito neste aparelho
+  const q=LS('desinchar_quiz'); if(!q||!q.best) return null;
+  const map={0:'lactose',1:'gluten',2:'veg'};
+  return {p:q.best, r:((q.ans&&q.ans.restr)||[]).map(i=>map[i]).filter(Boolean), n:q.nome||'', dia:1};
+}
+function boot(){
+  if(CONFIG.ACCESS_CODE && !LS('desinchar_ok')) return view('gate');
+  if(!st.p){ const q=fromQuiz(); if(q){ st=q; SS('desinchar_plano',st); } }
+  if(!st.p){ buildSetup(); return view('setup'); }
+  curDay=st.dia||1;
+  document.getElementById('tabs').style.display='flex';
+  renderHoje(); renderGuia(); renderBonus(); renderCompras();
+  view('v-hoje');
+}
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  if(b.dataset.v==='v-compras') renderCompras();
+  view(b.dataset.v);
+});
+boot();
+</script>
+</body>
+</html>
