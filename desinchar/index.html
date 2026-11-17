@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teste do Inchaço — Desinchar 21</title>
+<title>Mapa do Inchaço — Descubra o seu tipo de inchaço</title>
 <meta name="description" content="Descubra em 1 minuto por que sua barriga incha e receba um plano de 21 dias feito para o seu perfil.">
 <meta name="theme-color" content="#0B6E52">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,26 +91,128 @@ input.txt:focus{outline:none;border-color:var(--primary)}
 .sticky{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(239,243,240,.95);backdrop-filter:blur(8px);display:none}
 .sticky.on{display:block}
 .sticky .btn{max-width:488px;margin:auto}
+/* banner da página inicial */
+.cd{background:var(--accent);color:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:.02em;margin-bottom:12px;text-align:left}
+.cd b{font-size:24px;font-variant-numeric:tabular-nums;letter-spacing:0;white-space:nowrap}
+.banner{background:#fff;border-radius:22px;padding:18px 14px 16px;color:var(--ink);overflow:hidden;box-shadow:var(--shadow)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo .ic{width:44px;height:44px;border-radius:12px;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-size:24px;flex:0 0 auto}
+.logo b{font-size:20px;line-height:1.1;display:block}
+.logo small{display:block;font-size:11px;color:var(--ink-soft)}
+.banner h1{color:var(--ink);font-family:'Work Sans',sans-serif;font-weight:800;font-size:29px;line-height:1.12;letter-spacing:-.01em;margin:16px 0 8px}
+.banner h1 mark{background:none;color:var(--accent-d)}
+.bsub{font-size:15px;color:var(--ink-soft);margin:0}
+.banner .hint{color:var(--ink-soft)}
+.banner .pcard .hint{color:var(--ink-soft)}
+#heroImg img{width:100%;border-radius:18px;margin-top:16px;display:block}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);background:var(--bg);border-radius:14px;margin-top:18px}
+.stats div{text-align:center;padding:10px 4px;font-size:11px;line-height:1.25;color:var(--ink-soft);border-right:1px solid var(--line)}
+.stats b{color:var(--primary)}
+.stats div:last-child{border:0}
+.stats b{display:block;font-size:20px;margin-bottom:2px}
+.recebe{background:#FFF9F0;color:var(--ink);border-radius:18px;padding:24px 14px 6px;margin-top:26px;position:relative}
+.recebe .tag{position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-weight:700;padding:7px 18px;border-radius:99px;white-space:nowrap;font-size:14px}
+.recebe div{display:flex;gap:12px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line);font-size:14px;font-weight:600}
+.recebe div:last-child{border:0}
+.recebe span{width:24px;text-align:center;font-size:17px}
+.pcard{background:#FFF9F0;color:var(--ink);border-radius:18px;padding:18px 16px;margin-top:14px;text-align:center;border:2px solid #F3C9B8}
+.pcard .big{font-family:'Bebas Neue',sans-serif;font-size:62px;color:var(--accent-d);line-height:1;margin:4px 0}
+.pg{display:flex;gap:10px;align-items:center;text-align:left;border-top:1px solid var(--line);padding:12px 0 14px;margin-top:6px}
+.callout{margin-top:14px;border:1.5px solid var(--line);color:var(--ink-soft);border-radius:99px;padding:10px 14px;font-size:13px;text-align:center}
+/* mockup do app */
+.mock{margin:22px 0 4px}
+.phone{width:230px;margin:auto;background:#fff;color:var(--ink);border-radius:34px;padding:14px 12px 16px;border:8px solid #10201A;box-shadow:0 24px 50px -20px rgba(16,32,26,.45);position:relative;transform:rotate(-2deg)}
+.notch{width:70px;height:16px;background:#10201A;border-radius:0 0 12px 12px;margin:-14px auto 10px}
+.ph-hero{background:linear-gradient(140deg,var(--primary),var(--primary-d));color:#fff;border-radius:14px;padding:10px 12px}
+.ph-hero small{font-size:8px;letter-spacing:.1em;opacity:.85;display:block}
+.ph-hero b{font-family:'Bebas Neue';font-size:22px;font-weight:400;letter-spacing:.02em}
+.ph-hero i{display:block;height:5px;border-radius:9px;background:rgba(255,255,255,.25);margin-top:6px;position:relative;overflow:hidden}
+.ph-hero i:after{content:'';position:absolute;inset:0 86% 0 0;background:var(--accent)}
+.ph-day{display:flex;gap:5px;margin:8px 0}
+.ph-day span{flex:1;text-align:center;font-size:11px;font-weight:700;padding:6px 0;border-radius:8px;background:var(--bg)}
+.ph-day span.on{background:var(--primary);color:#fff}
+.ph-card{background:var(--bg);border-radius:12px;padding:4px 10px;margin-top:6px;font-size:10.5px;line-height:1.35}
+.ph-card div{padding:5px 0;border-bottom:1px solid var(--line)}
+.ph-card div:last-child{border:0}
+.ph-card em{display:block;font-style:normal;font-size:8px;font-weight:800;color:var(--primary);letter-spacing:.06em}
+.ph-ck div{color:var(--primary-d);font-weight:600}
+.ph-ck .off{color:var(--ink-soft);font-weight:500}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.trust div{background:#fff;border-radius:14px;padding:12px 6px;text-align:center;font-size:12px;font-weight:600;box-shadow:var(--shadow);line-height:1.3}
+.trust b{display:block;font-size:20px;margin-bottom:4px}
+/* lançamento */
+.launch{background:#FFF1EC;border:1.5px dashed var(--accent);border-radius:14px;padding:10px 12px;text-align:center;font-size:14px;margin:0 0 12px}
+.launch b{color:var(--accent-d)}
+/* depoimentos */
+.dep{border-left:3px solid var(--primary);padding:4px 0 4px 12px;margin:12px 0}
+.dep p{margin:0 0 4px;line-height:1.45}
+.dep small{color:var(--ink-soft);font-weight:600}
+.pico{font-size:44px;line-height:1;margin-bottom:4px}
+.pico img{width:68px;height:68px;border-radius:18px;background:#fff;display:block;padding:4px}
+#heroImg img{height:auto;aspect-ratio:1122/1402;object-fit:cover}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">DESINCHAR<span>21</span></div>
+  <div class="brand" style="display:none">MAPA DO <span>INCHAÇO</span></div>
 
   <!-- INÍCIO -->
   <section class="screen on" id="s-start">
-    <span class="pill">TESTE GRATUITO · 1 MINUTO</span>
-    <h1>Por que sua barriga <em>incha</em> mesmo quando você come pouco?</h1>
-    <p class="soft">Existem 5 tipos de inchaço diferentes, e cada um precisa de um cardápio diferente. Responda 10 perguntas rápidas e descubra o seu.</p>
-    <div class="card">
-      <ul class="checks" style="margin:0">
-        <li>Descubra qual é o <b>seu tipo de inchaço</b></li>
-        <li>Veja os <b>3 hábitos</b> que estão piorando o seu caso</li>
-        <li>Receba uma <b>amostra do seu cardápio</b> na hora</li>
-      </ul>
+    <div class="cd" id="cdTop" style="display:none"></div>
+
+    <div class="banner">
+      <div class="logo">
+        <div class="ic">🌿</div>
+        <div><b>Mapa do Inchaço</b><small>Descubra o seu tipo e desinche em 21 dias</small></div>
+      </div>
+      <h1>Cada dia inchada é mais um dia <mark>fugindo do espelho.</mark></h1>
+      <p class="bsub">Existem 5 tipos de inchaço, e cada um pede um cardápio diferente. Faça o teste de 1 minuto e receba o plano do <b>seu</b> tipo.</p>
+      <button class="btn" style="margin-top:16px" onclick="startQuiz()">DESCOBRIR MEU TIPO DE INCHAÇO →</button>
+      <p class="hint" style="text-align:center;margin:8px 0 0">Teste grátis · sem cadastro · resultado na hora</p>
+
+      <div id="heroImg"></div>
+      <div class="mock" id="heroMock" aria-hidden="true">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="ph-hero"><small>INCHAÇO POR RETENÇÃO</small><b>Dia 3 de 21</b><i></i></div>
+        <div class="ph-day"><span>1</span><span>2</span><span class="on">3</span><span>4</span><span>5</span></div>
+        <div class="ph-card">
+          <div><em>CAFÉ</em>Ovos, melancia e chá de hibisco</div>
+          <div><em>ALMOÇO</em>Frango com ervas, arroz e pepino</div>
+          <div><em>JANTAR</em>Peixe com abobrinha e tomate</div>
+        </div>
+        <div class="ph-card ph-ck"><div>✓ Bebi 2 litros de água</div><div>✓ Fiz as 5 refeições</div><div class="off">○ Caminhei 15 minutos</div></div>
+      </div>
+      </div>
+
+      <div class="stats">
+        <div><b>5</b>tipos de inchaço</div>
+        <div><b>21</b>dias de plano</div>
+        <div><b>1 min</b>para o teste</div>
+      </div>
+
+      <div class="recebe">
+        <span class="tag">O que você recebe</span>
+        <div><span>🔎</span>Diagnóstico do seu tipo de inchaço</div>
+        <div><span>📅</span>Cardápio de 21 dias para o seu tipo</div>
+        <div><span>🥗</span>Adaptado às suas restrições</div>
+        <div><span>🛒</span>Lista de compras da semana</div>
+        <div><span>🔄</span>Troca de refeições com um toque</div>
+        <div><span>📏</span>Diário para ver sua evolução</div>
+        <div><span>🧲</span>Cola da Geladeira para imprimir</div>
+        <div><span>🎁</span>3 bônus: chás, guia SOS e doces</div>
+      </div>
+
+      <div class="pcard">
+        <div style="font-weight:800;font-size:17px">Libere o seu plano personalizado<br>por apenas</div>
+        <div class="big">R$ 26,90</div>
+        <div class="pg"><span style="font-size:30px">🛡️</span><span><b>Garantia de 7 dias</b><br><small class="soft">100% do valor de volta se não gostar</small></span></div>
+        <button class="btn" onclick="startQuiz()">FAZER MEU TESTE GRÁTIS →</button>
+        <p class="hint" style="margin:8px 0 0">O teste é grátis · resultado na hora · você só paga se quiser o plano</p>
+      </div>
+
+      <div class="callout">📅 Não espere mais um verão para se sentir bem no seu corpo.</div>
     </div>
-    <button class="btn" onclick="startQuiz()">Começar o teste →</button>
-    <p class="hint" style="text-align:center;margin-top:10px">Sem cadastro para começar · resultado na hora</p>
   </section>
 
   <!-- PERGUNTAS -->
@@ -150,6 +252,7 @@ input.txt:focus{outline:none;border-color:var(--primary)}
   <!-- RESULTADO + OFERTA -->
   <section class="screen" id="s-result">
     <div class="profile">
+      <div class="pico" id="rIco"></div>
       <span class="pill" style="background:rgba(255,255,255,.18);color:#fff" id="rHello"></span>
       <h2 id="rName"></h2>
       <p id="rDesc"></p>
@@ -157,6 +260,11 @@ input.txt:focus{outline:none;border-color:var(--primary)}
         <div class="bar"><i id="rMeter"></i></div>
         <small><span>Leve</span><span id="rLevel"></span><span>Intenso</span></small>
       </div>
+    </div>
+
+    <div class="card">
+      <h2>Por que nenhuma dieta desinchou você até hoje</h2>
+      <p class="soft" style="margin:0">Quase toda dieta trata inchaço como se fosse uma coisa só. Mas existem <b>5 tipos diferentes</b>, e o que desincha um pode piorar o outro. A salada crua que ajuda na retenção, por exemplo, estufa quem tem inchaço por fermentação. Por isso você "faz tudo certo" e continua inchada: o plano não era para o seu tipo.</p>
     </div>
 
     <div class="card">
@@ -183,34 +291,56 @@ input.txt:focus{outline:none;border-color:var(--primary)}
     </div>
 
     <!-- OFERTA -->
+    <div class="card">
+      <h2>Como funciona o Método 3D</h2>
+      <div class="err"><b>1</b><span><b>Desinchar (dias 1 a 7):</b> você corta o que mais incha no <i>seu</i> tipo. É quando a barriga fica mais leve.</span></div>
+      <div class="err"><b>2</b><span><b>Destravar (dias 8 a 14):</b> o intestino e a fome se regulam e alguns alimentos voltam ao prato.</span></div>
+      <div class="err"><b>3</b><span><b>Definir (dias 15 a 21):</b> você aprende a montar o prato sozinha para o inchaço não voltar.</span></div>
+    </div>
+
     <div class="card offer" id="oferta">
       <span class="pill">SEU PLANO ESTÁ PRONTO</span>
-      <h2 style="margin-top:10px">Plano Desinchar 21 Dias: <span id="oName"></span></h2>
-      <ul class="checks">
-        <li>Cardápio de <b>21 dias</b> para o seu tipo de inchaço, em 3 fases</li>
-        <li>Já adaptado às suas restrições e à sua rotina</li>
-        <li><b>Lista de compras semanal</b> que dá para ir marcando no mercado</li>
-        <li>Lista do que comer e do que evitar no seu caso</li>
-        <li>Trocas: não gostou de algo, troca por outro equivalente</li>
-        <li>Acesso pelo celular, sem PDF para baixar</li>
-      </ul>
-      <div style="margin:6px 0 4px;font-weight:700">Bônus inclusos hoje:</div>
+      <h2 style="margin-top:10px">Método 3D · Desinchar 21: <span id="oName"></span></h2>
+      <p class="soft" style="margin:4px 0 0">Tudo dentro de um app no seu celular. Sem PDF, sem planilha.</p>
+      <div class="bonus"><span>📅 <b>Plano 21 Dias</b> do seu tipo de inchaço, nas 3 fases, já adaptado às suas restrições</span></div>
+      <div class="bonus"><span>🛒 <b>Lista de Compras Inteligente</b>: gerada do seu cardápio, semana a semana, para ir marcando no mercado</span></div>
+      <div class="bonus"><span>🧲 <b>Cola da Geladeira</b>: o que comer e o que evitar no seu tipo, numa folha para imprimir</span></div>
+      <div class="bonus"><span>📏 <b>Diário do Inchaço</b>: anote cintura e inchaço nos dias 0, 7, 14 e 21 e veja sua evolução</span></div>
+      <div class="bonus"><span>🔄 <b>Troca de refeições</b>: não gostou de algo, troca por outra equivalente com um toque</span></div>
+      <div style="margin:14px 0 4px;font-weight:700">Bônus inclusos hoje:</div>
       <div class="bonus"><span>🍵 15 chás e sucos para desinchar</span><s>R$ 27</s></div>
-      <div class="bonus"><span>🍽️ Guia "Comendo fora sem estragar tudo"</span><s>R$ 19</s></div>
+      <div class="bonus"><span>🆘 Guia SOS: festa, restaurante e fim de semana sem estragar tudo</span><s>R$ 19</s></div>
       <div class="bonus"><span>🍫 Doces sem açúcar para a vontade da TPM</span><s>R$ 17</s></div>
-      <div class="bonus"><span>✅ Checklist diário dos 21 dias</span><s>R$ 12</s></div>
+      <div class="launch" id="launch" style="display:none"></div>
       <div class="price">
-        <s>De R$ 97,00</s>
-        <strong>R$ 27</strong>
-        <small>pagamento único · acesso imediato</small>
+        <s>Uma consulta com nutricionista custa R$ 200 ou mais</s>
+        <strong>R$ 26,90</strong>
+        <small>pagamento único · <b>R$ 1,28 por dia</b> durante os 21 dias</small>
       </div>
       <a class="btn" id="ctaBtn" href="#" onclick="goCheckout(event)">Quero meu plano personalizado →</a>
-      <p class="hint" style="text-align:center;margin-top:10px">Pix ou cartão · Menos que um delivery</p>
+      <p class="hint" style="text-align:center;margin-top:10px">Pix ou cartão · Acesso imediato no celular</p>
     </div>
+
+    <div class="card" id="deps" style="display:none"></div>
 
     <div class="card guar">
       <div class="seal">🛡️</div>
-      <div><b>Garantia de 7 dias</b><br><span class="soft">Se não gostar, devolvemos 100% do seu dinheiro. Basta pedir, sem perguntas.</span></div>
+      <div><b>Barriga mais leve em 7 dias, ou seu dinheiro de volta</b><br><span class="soft">Siga a fase Desinchar por 7 dias. Se não sentir a barriga mais leve, peça o reembolso dentro da garantia e devolvemos 100%, sem perguntas.</span></div>
+    </div>
+
+    <div class="card">
+      <h2>É para você se…</h2>
+      <ul class="checks" style="margin:6px 0 14px">
+        <li>Acorda bem e termina o dia com a barriga estufada</li>
+        <li>Já tentou dieta e não aguentou passar fome</li>
+        <li>Quer saber exatamente o que comer, sem ter que pensar</li>
+      </ul>
+      <h2>Não é para você se…</h2>
+      <ul style="margin:6px 0 0;padding-left:20px;line-height:1.6" class="soft">
+        <li>Está grávida ou amamentando (procure seu médico)</li>
+        <li>Tem dor abdominal forte, sangramento ou inchaço que não melhora: isso precisa de avaliação médica</li>
+        <li>Procura uma fórmula mágica para perder 10 kg em uma semana</li>
+      </ul>
     </div>
 
     <div class="card faq">
@@ -218,23 +348,47 @@ input.txt:focus{outline:none;border-color:var(--primary)}
       <details><summary>Preciso comprar coisas caras?</summary><p class="soft">Não. O cardápio usa comida de mercado comum: ovo, frango, arroz, legumes, frutas da estação.</p></details>
       <details><summary>E se eu não tiver tempo de cozinhar?</summary><p class="soft">O plano considera o tempo que você disse ter. As receitas mais longas podem ser feitas no domingo e congeladas.</p></details>
       <details><summary>Vou passar fome?</summary><p class="soft">Não. São 4 a 5 refeições por dia, com comida de verdade. O foco é desinchar, não fazer você passar vontade.</p></details>
+      <details><summary>Em quanto tempo sinto diferença?</summary><p class="soft">A fase Desinchar dura 7 dias, e é nela que a maioria das mulheres sente a barriga mais leve. Por isso a garantia cobre exatamente esse período. Os resultados variam de pessoa para pessoa.</p></details>
       <details><summary>Como recebo o acesso?</summary><p class="soft">Logo após o pagamento, você recebe o link do seu plano no e-mail e no WhatsApp. É só abrir no celular.</p></details>
       <details><summary>Serve para quem usa canetinha ou remédio?</summary><p class="soft">O plano é alimentar e não substitui tratamento. Se você faz algum tratamento, mostre o cardápio ao seu médico ou nutricionista.</p></details>
     </div>
 
-    <a class="btn" href="#oferta">Liberar meu plano por R$ 27 →</a>
+    <div class="card">
+      <h2>Consulta x Método 3D</h2>
+      <div class="bonus"><span><b></b></span><span style="display:flex;gap:18px"><b style="width:70px;text-align:center">Consulta</b><b style="width:70px;text-align:center;color:var(--primary)">Método 3D</b></span></div>
+      <div class="bonus"><span>Cardápio para o seu tipo</span><span style="display:flex;gap:18px"><span style="width:70px;text-align:center">✓</span><span style="width:70px;text-align:center">✓</span></span></div>
+      <div class="bonus"><span>Lista de compras pronta</span><span style="display:flex;gap:18px"><span style="width:70px;text-align:center">às vezes</span><span style="width:70px;text-align:center">✓</span></span></div>
+      <div class="bonus"><span>Troca de refeições a qualquer hora</span><span style="display:flex;gap:18px"><span style="width:70px;text-align:center">—</span><span style="width:70px;text-align:center">✓</span></span></div>
+      <div class="bonus"><span>Avaliação individual da sua saúde</span><span style="display:flex;gap:18px"><span style="width:70px;text-align:center">✓</span><span style="width:70px;text-align:center">—</span></span></div>
+      <div class="bonus" style="border:0"><span><b>Preço</b></span><span style="display:flex;gap:18px"><b style="width:70px;text-align:center">R$ 200+</b><b style="width:70px;text-align:center;color:var(--primary)">R$ 26,90</b></span></div>
+    </div>
+
+    <a class="btn" href="#oferta">Liberar meu plano por R$ 26,90 →</a>
 
     <p class="disc">Este conteúdo é educativo e não substitui consulta com médico ou nutricionista. Os resultados variam de pessoa para pessoa. Inchaço persistente, dor forte ou alterações intestinais frequentes devem ser avaliados por um profissional de saúde.</p>
   </section>
 </div>
 
-<div class="sticky" id="sticky"><a class="btn" href="#oferta">Liberar meu plano por R$ 27</a></div>
+<div class="sticky" id="sticky"><a class="btn" href="#oferta">Liberar meu plano por R$ 26,90</a></div>
 
 <script>
 /* ===== CONFIGURAÇÃO — edite aqui ===== */
 const CONFIG = {
-  CHECKOUT_URL: 'https://pay.kiwify.com.br/SEU-LINK',  // cole o link do checkout (Kiwify / Cakto / Hotmart)
+  CHECKOUT_URL: 'https://pay.cakto.com.br/ogt8d87_1337835',  // checkout da Cakto (Método 3D · Desinchar 21)
   META_PIXEL_ID: '',                                     // ex: '1234567890' (deixe vazio para desligar)
+
+  // PREÇO DE LANÇAMENTO (gatilho de urgência REAL): só use se o preço realmente
+  // subir nessa data. Formato 'AAAA-MM-DD'. Depois da data, o aviso some sozinho.
+  LANCAMENTO_ATE: '',          // ex: '2026-12-15'
+  PRECO_DEPOIS: 'R$ 37',       // o preço que passa a valer depois
+
+  // DEPOIMENTOS: só de compradoras reais, com autorização por escrito.
+  // A seção fica escondida enquanto a lista estiver vazia.
+  // ex: { texto: 'Na primeira semana já senti a barriga mais leve.', nome: 'Carla', cidade: 'Goiânia', perfil: 'Retenção de Líquido' }
+  DEPOIMENTOS: [],
+
+  // IMAGEM DO TOPO (opcional): caminho de uma foto, ex: 'img/hero.jpg'. Vazio = mostra o mockup do app.
+  HERO_IMG: 'img/hero-espelho.webp',
 };
 
 /* ===== Meta Pixel (opcional) ===== */
@@ -313,7 +467,26 @@ const SWAPS = {
 /* ===== ESTADO ===== */
 let idx = 0; const ans = {};
 
-function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0,0); }
+/* topo: contagem até a data real de lançamento e imagem opcional */
+(function initTopo(){
+  if (CONFIG.HERO_IMG){
+    document.getElementById('heroMock').style.display='none';
+    document.getElementById('heroImg').innerHTML = `<img src="${CONFIG.HERO_IMG.replace(/"/g,'')}" alt="Mulher sorrindo para o espelho com a mão na barriga" width="1122" height="1402" fetchpriority="high">`;
+  }
+  if (!CONFIG.LANCAMENTO_ATE) return;
+  const fim = new Date(CONFIG.LANCAMENTO_ATE + 'T23:59:59'), el = document.getElementById('cdTop');
+  const p2 = n => String(n).padStart(2,'0');
+  const tick = () => {
+    const ms = fim - new Date();
+    if (ms <= 0){ el.style.display='none'; return; }
+    const d = Math.floor(ms/864e5), h = Math.floor(ms/36e5)%24, m = Math.floor(ms/6e4)%60, s = Math.floor(ms/1e3)%60;
+    el.style.display='flex';
+    el.innerHTML = `<b>${d>0?d+'d ':''}${p2(h)}:${p2(m)}:${p2(s)}</b><span>⏰ Preço de lançamento termina em breve</span>`;
+  };
+  tick(); setInterval(tick, 1000);
+})();
+
+function show(id){ document.querySelector('.brand').style.display = id==='s-start' ? 'none' : ''; document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); document.getElementById(id).classList.add('on'); window.scrollTo(0,0); }
 function startQuiz(){ track('ViewContent',{content_name:'quiz_start'}); show('s-quiz'); renderQ(); }
 
 function renderQ(){
@@ -381,15 +554,45 @@ function renderResult(){
   document.getElementById('rAdapt').textContent = rs.length ? 'Já adaptado: ' + rs.map(k=>lbl[k]).join(', ') : 'Feito para o seu perfil de inchaço';
   document.getElementById('rLockName').textContent = p.n;
   document.getElementById('oName').textContent = p.n;
+  // ícones ilustrados: adicione aqui conforme for gerando (ex: i:'img/icone-intestino.webp')
+  const ICONES = { h:'img/icone-hormonal.webp' };
+  document.getElementById('rIco').innerHTML = ICONES[best]
+    ? `<img src="${ICONES[best]}" alt="">`
+    : ({h:'🌙',i:'🐢',r:'💧',g:'🎈',c:'⏰'})[best];
+  renderGatilhos();
   try { localStorage.setItem('desinchar_quiz', JSON.stringify({ans, best, nome, ts:Date.now()})); } catch(e){}
   show('s-result');
   document.getElementById('sticky').classList.add('on');
   window.__perfil = best;
 }
 
+function renderGatilhos(){
+  // Lançamento: contagem até uma data real configurada
+  const box = document.getElementById('launch');
+  if (CONFIG.LANCAMENTO_ATE){
+    const fim = new Date(CONFIG.LANCAMENTO_ATE + 'T23:59:59');
+    const tick = () => {
+      const ms = fim - new Date();
+      if (ms <= 0){ box.style.display='none'; return; }
+      const d = Math.floor(ms/864e5), h = Math.floor(ms/36e5)%24, m = Math.floor(ms/6e4)%60;
+      box.style.display='block';
+      box.innerHTML = `🔥 <b>Preço de lançamento</b> até ${fim.toLocaleDateString('pt-BR')}. Depois passa para ${esc(CONFIG.PRECO_DEPOIS)}.<br><small>Faltam ${d}d ${h}h ${m}min</small>`;
+    };
+    tick(); clearInterval(window.__lt); window.__lt = setInterval(tick, 30000);
+  }
+  // Depoimentos reais
+  const deps = CONFIG.DEPOIMENTOS || [];
+  const dbox = document.getElementById('deps');
+  if (deps.length){
+    dbox.style.display='block';
+    dbox.innerHTML = '<h2>Quem já seguiu o plano</h2>' + deps.map(x=>
+      `<div class="dep"><p>"${esc(x.texto)}"</p><small>${esc(x.nome)}${x.cidade?', '+esc(x.cidade):''}${x.perfil?' · '+esc(x.perfil):''}</small></div>`).join('');
+  }
+}
+
 function goCheckout(ev){
   ev.preventDefault();
-  track('InitiateCheckout',{value:27,currency:'BRL'});
+  track('InitiateCheckout',{value:26.90,currency:'BRL'});
   const u = new URL(CONFIG.CHECKOUT_URL);
   const nome = (document.getElementById('nome').value||'').trim();
   if (nome) u.searchParams.set('name', nome);
